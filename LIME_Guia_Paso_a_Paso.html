@@ -1,0 +1,2070 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIME — Guía Paso a Paso para Principiantes</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root {
+  --bg: #F7F5F0;
+  --bg2: #EFECE5;
+  --ink: #1A1814;
+  --ink2: #3D3A34;
+  --ink3: #7A7570;
+  --lime: #4A7C1F;
+  --lime-light: #E8F5D4;
+  --lime-mid: #8BBF3A;
+  --amber: #C47A1A;
+  --amber-light: #FFF3DC;
+  --red: #C4351A;
+  --red-light: #FFE8E3;
+  --blue: #1A5C8B;
+  --blue-light: #E0EEFA;
+  --rule: rgba(26,24,20,0.1);
+  --radius: 6px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--ink);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  line-height: 1.7;
+}
+
+/* ─── STICKY NAV ─── */
+.sticky-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  background: rgba(247,245,240,0.95);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--rule);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0;
+  padding: 0 24px;
+  height: 52px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.sticky-nav::-webkit-scrollbar { display: none; }
+
+.nav-logo {
+  font-family: 'DM Serif Display', serif;
+  font-size: 18px;
+  color: var(--lime);
+  margin-right: 24px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-link {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  color: var(--ink3);
+  text-decoration: none;
+  padding: 0 14px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+.nav-link:hover { color: var(--lime); border-bottom-color: var(--lime); }
+
+/* ─── HERO ─── */
+.hero {
+  padding: 120px 24px 80px;
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.hero-kicker {
+  display: inline-block;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--lime);
+  background: var(--lime-light);
+  border: 1px solid rgba(74,124,31,0.25);
+  padding: 5px 14px;
+  border-radius: 2px;
+  margin-bottom: 28px;
+}
+
+.hero h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(38px, 7vw, 68px);
+  line-height: 1.1;
+  color: var(--ink);
+  margin-bottom: 20px;
+  letter-spacing: -1px;
+}
+
+.hero h1 em {
+  color: var(--lime);
+  font-style: italic;
+}
+
+.hero-lead {
+  font-size: 18px;
+  color: var(--ink3);
+  max-width: 580px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+}
+
+.promise-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.promise-item {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  text-align: center;
+}
+
+.promise-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+.promise-text { font-size: 13px; font-weight: 600; color: var(--ink2); line-height: 1.4; }
+
+/* ─── SECTIONS ─── */
+.section {
+  max-width: 820px;
+  margin: 0 auto;
+  padding: 64px 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.section-num {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-num::after {
+  content: '';
+  flex: 1;
+  max-width: 40px;
+  height: 1px;
+  background: var(--rule);
+}
+
+.section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(26px, 4vw, 40px);
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 12px;
+  letter-spacing: -0.5px;
+}
+
+.section-intro {
+  font-size: 16px;
+  color: var(--ink3);
+  max-width: 640px;
+  margin-bottom: 40px;
+  line-height: 1.8;
+}
+
+/* ─── STEP BLOCKS ─── */
+.step-block {
+  background: white;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  margin-bottom: 24px;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+
+.step-block:hover { box-shadow: 0 4px 24px rgba(0,0,0,0.06); }
+
+.step-header {
+  display: flex;
+  align-items: stretch;
+  cursor: pointer;
+  user-select: none;
+}
+
+.step-num-badge {
+  font-family: 'DM Serif Display', serif;
+  font-size: 28px;
+  color: white;
+  background: var(--lime);
+  width: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-style: italic;
+}
+
+.step-header-content {
+  padding: 20px 24px;
+  flex: 1;
+}
+
+.step-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 4px;
+  line-height: 1.3;
+}
+
+.step-subtitle {
+  font-size: 13px;
+  color: var(--ink3);
+}
+
+.step-toggle {
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  color: var(--ink3);
+  font-size: 18px;
+  transition: transform 0.3s;
+}
+
+.step-body {
+  padding: 0 24px 28px 24px;
+  border-top: 1px solid var(--rule);
+  margin-top: 0;
+  display: none;
+}
+
+.step-body.open { display: block; }
+.step-toggle.open { transform: rotate(90deg); }
+
+/* ─── CONTENT ELEMENTS ─── */
+.body-intro {
+  font-size: 15px;
+  color: var(--ink3);
+  margin: 20px 0 24px;
+  line-height: 1.8;
+  padding-left: 16px;
+  border-left: 3px solid var(--lime-mid);
+}
+
+.substep-list {
+  list-style: none;
+  margin: 0 0 20px;
+}
+
+.substep-list li {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+  padding: 14px 0;
+  border-bottom: 1px solid var(--rule);
+}
+
+.substep-list li:last-child { border-bottom: none; }
+
+.substep-icon {
+  width: 30px; height: 30px;
+  background: var(--lime-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.substep-text strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 3px;
+}
+
+.substep-text p {
+  font-size: 14px;
+  color: var(--ink3);
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ─── CALLOUT BOXES ─── */
+.callout {
+  border-radius: var(--radius);
+  padding: 18px 20px;
+  margin: 20px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+.callout-body strong {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.callout-body p {
+  font-size: 14px;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.callout-green { background: var(--lime-light); }
+.callout-green .callout-body strong { color: var(--lime); }
+.callout-green .callout-body p { color: #3a5a1a; }
+
+.callout-amber { background: var(--amber-light); }
+.callout-amber .callout-body strong { color: var(--amber); }
+.callout-amber .callout-body p { color: #6b4200; }
+
+.callout-red { background: var(--red-light); }
+.callout-red .callout-body strong { color: var(--red); }
+.callout-red .callout-body p { color: #7a1500; }
+
+.callout-blue { background: var(--blue-light); }
+.callout-blue .callout-body strong { color: var(--blue); }
+.callout-blue .callout-body p { color: #0d3555; }
+
+/* ─── SCRIPT BOX ─── */
+.script-box {
+  background: #1A1814;
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.script-label {
+  background: var(--lime);
+  color: white;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  padding: 7px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.script-text {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #C8F0A0;
+  padding: 20px 20px;
+  white-space: pre-wrap;
+}
+
+.script-note {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 12px;
+  color: #4a6a30;
+  background: #0f120a;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+  font-style: italic;
+}
+
+/* ─── CONVERSATION BUBBLE ─── */
+.chat-container { margin: 20px 0; }
+
+.chat-row {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  align-items: flex-end;
+}
+
+.chat-row.them { justify-content: flex-start; }
+.chat-row.you { justify-content: flex-end; }
+
+.avatar {
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.avatar-them { background: #E0E0E0; }
+.avatar-you { background: var(--lime-light); }
+
+.bubble {
+  max-width: 75%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.bubble-them {
+  background: white;
+  border: 1px solid var(--rule);
+  color: var(--ink);
+  border-bottom-left-radius: 4px;
+}
+
+.bubble-you {
+  background: var(--lime);
+  color: white;
+  border-bottom-right-radius: 4px;
+}
+
+.chat-label {
+  font-size: 11px;
+  color: var(--ink3);
+  margin-bottom: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ─── DO / DON'T ─── */
+.dodont-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin: 20px 0;
+}
+
+.do-box, .dont-box {
+  border-radius: var(--radius);
+  padding: 20px;
+}
+
+.do-box { background: var(--lime-light); border: 1px solid rgba(74,124,31,0.2); }
+.dont-box { background: var(--red-light); border: 1px solid rgba(196,53,26,0.2); }
+
+.do-box h4 { color: var(--lime); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+.dont-box h4 { color: var(--red); font-size: 12px; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 12px; font-weight: 700; }
+
+.do-box ul, .dont-box ul { list-style: none; }
+.do-box li, .dont-box li { font-size: 14px; padding: 5px 0; display: flex; gap: 8px; line-height: 1.5; }
+.do-box li { color: #2a5000; }
+.dont-box li { color: #7a1500; }
+
+/* ─── OBJECTION TABLE ─── */
+.obj-table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 14px; }
+.obj-table th {
+  text-align: left;
+  padding: 10px 16px;
+  background: var(--bg2);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  color: var(--ink3);
+  border-bottom: 2px solid var(--rule);
+}
+.obj-table td {
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--rule);
+  vertical-align: top;
+  line-height: 1.6;
+}
+.obj-table tr:last-child td { border-bottom: none; }
+.obj-table .objection { color: var(--red); font-weight: 600; }
+.obj-table .response { color: var(--ink2); }
+
+/* ─── CHECKLIST ─── */
+.checklist { list-style: none; margin: 16px 0; }
+.checklist li {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--rule);
+  font-size: 14px;
+  color: var(--ink2);
+  line-height: 1.5;
+  align-items: flex-start;
+}
+.checklist li:last-child { border-bottom: none; }
+.check-box {
+  width: 20px; height: 20px;
+  border: 2px solid var(--lime-mid);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  color: var(--lime);
+}
+
+/* ─── STAGES FLOW ─── */
+.flow-stages {
+  display: flex;
+  gap: 0;
+  margin: 24px 0;
+  border: 1px solid var(--rule);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.stage {
+  flex: 1;
+  padding: 20px 16px;
+  text-align: center;
+  border-right: 1px solid var(--rule);
+  position: relative;
+}
+
+.stage:last-child { border-right: none; }
+
+.stage-num {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  color: var(--lime-mid);
+  font-style: italic;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.stage-name {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.stage-desc { font-size: 12px; color: var(--ink3); line-height: 1.5; }
+
+/* ─── PILL TAGS ─── */
+.tags { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.tag {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 20px;
+  border: 1px solid;
+}
+.tag-green { background: var(--lime-light); color: var(--lime); border-color: rgba(74,124,31,0.25); }
+.tag-amber { background: var(--amber-light); color: var(--amber); border-color: rgba(196,122,26,0.25); }
+.tag-red { background: var(--red-light); color: var(--red); border-color: rgba(196,53,26,0.25); }
+
+/* ─── TIMELINE ─── */
+.mini-timeline { position: relative; padding-left: 28px; margin: 20px 0; }
+.mini-timeline::before {
+  content: '';
+  position: absolute;
+  left: 8px; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, var(--lime), var(--rule));
+}
+.tl-item { position: relative; margin-bottom: 24px; }
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -23px; top: 5px;
+  width: 7px; height: 7px;
+  background: var(--lime);
+  border-radius: 50%;
+}
+.tl-day {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  color: var(--lime);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+.tl-item h4 { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.tl-item p { font-size: 13px; color: var(--ink3); line-height: 1.6; }
+
+/* ─── FINAL CTA ─── */
+.cta-section {
+  background: var(--ink);
+  color: white;
+  padding: 80px 24px;
+  text-align: center;
+}
+
+.cta-section h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(28px, 5vw, 48px);
+  color: white;
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+.cta-section p {
+  color: #888;
+  font-size: 16px;
+  max-width: 520px;
+  margin: 0 auto 40px;
+  line-height: 1.8;
+}
+
+.cta-pills {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.cta-pill {
+  background: var(--lime);
+  color: white;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 28px;
+  border-radius: 4px;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
+
+.cta-pill.outline {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.2);
+  color: #aaa;
+}
+
+/* ─── RESPONSIVE ─── */
+@media (max-width: 600px) {
+  .promise-grid { grid-template-columns: 1fr; }
+  .dodont-grid { grid-template-columns: 1fr; }
+  .flow-stages { flex-direction: column; }
+  .stage { border-right: none; border-bottom: 1px solid var(--rule); }
+  .stage:last-child { border-bottom: none; }
+  .sticky-nav { padding: 0 16px; }
+}
+
+/* ─── PRINT ─── */
+@media print {
+  .sticky-nav { display: none; }
+  .step-body { display: block !important; }
+  .step-toggle { display: none; }
+  body { background: white; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="sticky-nav">
+  <span class="nav-logo">🟢 LIME</span>
+  <a href="#antes" class="nav-link">Antes de Empezar</a>
+  <a href="#mentalidad" class="nav-link">Mentalidad</a>
+  <a href="#explicar" class="nav-link">Cómo Explicar</a>
+  <a href="#objeciones" class="nav-link">Objeciones</a>
+  <a href="#whatsapp" class="nav-link">WhatsApp</a>
+  <a href="#instagram" class="nav-link">Instagram</a>
+  <a href="#seguimiento" class="nav-link">Seguimiento</a>
+  <a href="#duplicar" class="nav-link">Duplicar</a>
+  <a href="#checklist" class="nav-link">Checklist</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-kicker">Guía completa para principiantes</div>
+  <h1>Tu Manual para<br>Explicar LIME<br><em>sin experiencia</em></h1>
+  <p class="hero-lead">
+    Desde cero. Sin tecnicismos. Con las palabras exactas que necesitás para 
+    convencer a personas desconfiadas y lograr que actúen.
+  </p>
+  <div class="promise-grid">
+    <div class="promise-item">
+      <span class="promise-icon">💬</span>
+      <span class="promise-text">Scripts listos para copiar</span>
+    </div>
+    <div class="promise-item">
+      <span class="promise-icon">🛡️</span>
+      <span class="promise-text">Respuestas a cada objeción</span>
+    </div>
+    <div class="promise-item">
+      <span class="promise-icon">📋</span>
+      <span class="promise-text">Checklist día por día</span>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 0: ANTES DE EMPEZAR -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="antes">
+  <div class="section-num">Sección 0</div>
+  <h2>Antes de hablarle a alguien</h2>
+  <p class="section-intro">
+    Lo más importante no es lo que decís. Es que vos mismo entiendas y creas en lo que estás ofreciendo. 
+    Primero entrá, experimentá, y después compartí. Nunca al revés.
+  </p>
+
+  <div class="callout callout-amber">
+    <span class="callout-icon">⚡</span>
+    <div class="callout-body">
+      <strong>Regla de Oro</strong>
+      <p>No podés vender lo que no compraste. Antes de invitar a alguien, 
+      completá tu propio proceso de entrada y hacé tu primer retiro, aunque sea pequeño. 
+      Eso te da autoridad real para hablar.</p>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">1</div>
+      <div class="step-header-content">
+        <div class="step-title">Entendé el sistema vos primero</div>
+        <div class="step-subtitle">Los 3 conceptos que tenés que poder explicar con tus propias palabras</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">No necesitás entender blockchain, programación ni finanzas. 
+      Solo necesitás poder explicar 3 ideas simples:</p>
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">1️⃣</div>
+          <div class="substep-text">
+            <strong>Qué es LIME en palabras simples</strong>
+            <p>"Es un sistema de economía colaborativa donde cada persona ingresa ~15 dólares digitales (USDT), 
+            ayuda a otras 2 personas a entrar, y cuando esas posiciones se completan, 
+            el sistema te devuelve dinero directamente a tu wallet. Sin jefes, sin horarios, 
+            desde el celular."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">2️⃣</div>
+          <div class="substep-text">
+            <strong>Qué es USDT y cómo se usa</strong>
+            <p>"USDT es un dólar digital que viaja por internet como un mensaje de WhatsApp. 
+            Lo guardás en una app llamada wallet (billetera digital) y lo mandás o recibís en segundos, 
+            a cualquier parte del mundo, sin bancos."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">3️⃣</div>
+          <div class="substep-text">
+            <strong>Por qué no es una estafa</strong>
+            <p>"El dinero no lo mueve ninguna persona. Los pagos van directamente 
+            por la red TRC-20 (blockchain Tron), de wallet a wallet, 
+            sin intermediarios. Podés ver cada movimiento en tiempo real en Tronscan.org, 
+            público para cualquiera."</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>Ejercicio antes de empezar</strong>
+          <p>Grabate a vos mismo explicando estos 3 puntos en voz alta. 
+          Si podés hacerlo en menos de 2 minutos sin trabarte, estás listo 
+          para hablarle a otras personas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">2</div>
+      <div class="step-header-content">
+        <div class="step-title">Preparé tu kit básico</div>
+        <div class="step-subtitle">Las 4 herramientas mínimas que necesitás tener listas</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">📱</div>
+          <div class="substep-text">
+            <strong>Tu link de referido activo</strong>
+            <p>El link único de tu perfil en LIME. 
+            Es lo que mandás cuando alguien dice "quiero entrar". 
+            Guardalo en favoritos del celular y en Notas.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🎬</div>
+          <div class="substep-text">
+            <strong>Un video corto explicativo (menos de 3 minutos)</strong>
+            <p>Puede ser el video oficial de LIME o uno que grabés vos mismo explicando 
+            los 3 conceptos básicos. La gente entiende mejor viendo que leyendo. 
+            Guardá el video directo en tu celular para mandarlo sin depender de internet.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📄</div>
+          <div class="substep-text">
+            <strong>Tutorial de cómo crear una wallet (PDF o imagen)</strong>
+            <p>La barrera más común es no saber cómo tener USDT. 
+            Tené listo un PDF simple de 3 pasos: 
+            1) descargar TronLink o Trust Wallet, 
+            2) comprar USDT, 
+            3) enviar a la wallet. 
+            Si no tenés, pedíselo a tu upline.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📸</div>
+          <div class="substep-text">
+            <strong>Screenshot de tu primer retiro o transacción</strong>
+            <p>La prueba más poderosa que podés mostrar. 
+            Cuando alguien duda, mostrarle una transacción real tuya vale más que 
+            mil palabras de explicación.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 1: MENTALIDAD -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="mentalidad">
+  <div class="section-num">Sección 1</div>
+  <h2>La mentalidad correcta antes de hablar</h2>
+  <p class="section-intro">
+    La mayoría falla no porque no sabe explicar el sistema, 
+    sino porque llega a la conversación con la actitud equivocada.
+  </p>
+
+  <div class="dodont-grid">
+    <div class="do-box">
+      <h4>✅ SÍ hacé esto</h4>
+      <ul>
+        <li>✓ Compartir algo que te funcionó a vos</li>
+        <li>✓ Escuchar más de lo que hablás</li>
+        <li>✓ Hacer preguntas antes de explicar</li>
+        <li>✓ Ser honesto sobre los riesgos</li>
+        <li>✓ Respetar el "no me interesa"</li>
+        <li>✓ Dar tiempo para pensar</li>
+        <li>✓ Acompañar sin presionar</li>
+      </ul>
+    </div>
+    <div class="dont-box">
+      <h4>❌ NUNCA hagás esto</h4>
+      <ul>
+        <li>✗ Prometer ganancias exactas</li>
+        <li>✗ Presionar cuando dicen "lo pienso"</li>
+        <li>✗ Mandar info masiva sin preguntar</li>
+        <li>✗ Exagerar para convencer</li>
+        <li>✗ Enojarte si no entran</li>
+        <li>✗ Hablar antes de escuchar</li>
+        <li>✗ Decir que es fácil o rápido</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="callout callout-blue">
+    <span class="callout-icon">💡</span>
+    <div class="callout-body">
+      <strong>La frase que cambia todo</strong>
+      <p>En vez de "te quiero ofrecer algo", decí: 
+      <strong>"Encontré algo que me está funcionando a mí y quiero compartirlo, 
+      sin ninguna presión de que entres."</strong><br>
+      Esta frase baja la guardia de cualquier persona desconfiada.</p>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">3</div>
+      <div class="step-header-content">
+        <div class="step-title">Identificá a quién hablarle primero</div>
+        <div class="step-subtitle">No todos son el prospecto ideal. Ahorrá energía eligiendo bien.</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">Clasificá a tus contactos en 3 grupos antes de escribirles:</p>
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">🟢</div>
+          <div class="substep-text">
+            <strong>Grupo A — Empezar aquí (caliente)</strong>
+            <p>Personas que alguna vez hablaron de querer ganar más, emprender, 
+            tener libertad de horarios, o que preguntaron algo sobre crypto. 
+            Estos son tu prioridad. Escribiles primero. 
+            Son los más propensos a escuchar sin prejuicios.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🟡</div>
+          <div class="substep-text">
+            <strong>Grupo B — Segunda ronda (tibio)</strong>
+            <p>Personas que tienen necesidad económica visible (trabajo inestable, 
+            deudas, familia a cargo) o que conocés bien y sabés que son abiertas a 
+            ideas nuevas. Aquí usás primero la historia personal antes que el sistema.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🔴</div>
+          <div class="substep-text">
+            <strong>Grupo C — Dejar para el final (frío)</strong>
+            <p>Personas muy escépticas, con experiencias negativas previas en negocios de red, 
+            o que públicamente critican estas oportunidades. No los evitás, 
+            pero los abordás solo cuando ya tenés prueba sólida de resultados propios.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout callout-amber">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Error más común del principiante</strong>
+          <p>Empezar por el Grupo C, gastar energía en convencer a los más difíciles 
+          y desmotivarse. Siempre empezá por los que ya están predispuestos 
+          y construí momentum con ellos primero.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 2: CÓMO EXPLICAR -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="explicar">
+  <div class="section-num">Sección 2</div>
+  <h2>Cómo explicar LIME<br>en la vida real</h2>
+  <p class="section-intro">
+    La explicación perfecta dura menos de 3 minutos. 
+    Si tardás más, perdiste la atención. Seguí esta estructura exacta.
+  </p>
+
+  <div class="flow-stages">
+    <div class="stage">
+      <div class="stage-num">1</div>
+      <div class="stage-name">Gancho</div>
+      <div class="stage-desc">Despertá curiosidad sin explicar nada</div>
+    </div>
+    <div class="stage">
+      <div class="stage-num">2</div>
+      <div class="stage-name">Historia</div>
+      <div class="stage-desc">Tu experiencia personal</div>
+    </div>
+    <div class="stage">
+      <div class="stage-num">3</div>
+      <div class="stage-name">Concepto</div>
+      <div class="stage-desc">El sistema en palabras simples</div>
+    </div>
+    <div class="stage">
+      <div class="stage-num">4</div>
+      <div class="stage-name">Prueba</div>
+      <div class="stage-desc">Screenshot o transacción real</div>
+    </div>
+    <div class="stage">
+      <div class="stage-num">5</div>
+      <div class="stage-name">Invitación</div>
+      <div class="stage-desc">Sin presión, con puerta abierta</div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">4</div>
+      <div class="step-header-content">
+        <div class="step-title">Paso 1 del discurso: El Gancho</div>
+        <div class="step-subtitle">Cómo abrir la conversación sin que suene a venta</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">El objetivo del gancho no es explicar nada. 
+      Es generar una sola cosa: <strong>curiosidad</strong>. 
+      Una buena pregunta vale más que diez minutos de explicación.</p>
+
+      <div class="script-box">
+        <div class="script-label">🎣 GANCHO — EN PERSONA O POR CHAT</div>
+        <div class="script-text">Ey [nombre], ¿puedo preguntarte algo rápido?
+
+Si tuvieras una forma de hacer algo de plata extra 
+desde el celular, sin dejar lo que hacés ahora, 
+¿le prestarías atención 5 minutos?</div>
+        <div class="script-note">⟶ Esperá la respuesta antes de decir cualquier otra cosa. Si dice "sí", continuás. Si dice "no", respetás y no insistís.</div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">🎣 VARIANTE — MÁS PERSONAL</div>
+        <div class="script-text">Oye [nombre], vengo compartiendo algo 
+que me está funcionando hace [tiempo].
+
+No te voy a pedir nada, solo quiero contarte 
+por si te llama la atención. ¿Tenés 5 minutos?</div>
+        <div class="script-note">⟶ Funciona mejor con personas que conocés. La frase "no te voy a pedir nada" baja inmediatamente la guardia.</div>
+      </div>
+
+      <div class="callout callout-red">
+        <span class="callout-icon">🚫</span>
+        <div class="callout-body">
+          <strong>NUNCA abras con esto</strong>
+          <p>"Tengo un negocio increíble que te va a cambiar la vida" / 
+          "¿Querés ganar dinero fácil?" / 
+          "Te mando un video sobre una oportunidad de inversión" — 
+          Estas frases activan el modo defensa instantáneamente.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">5</div>
+      <div class="step-header-content">
+        <div class="step-title">Paso 2: Tu Historia Personal</div>
+        <div class="step-subtitle">La parte más poderosa de toda la presentación</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">Antes de hablar del sistema, contá TU historia. 
+      La gente no compra productos, compra personas. 
+      Si confían en vos, confían en lo que compartís.</p>
+
+      <div class="script-box">
+        <div class="script-label">📖 ESTRUCTURA DE TU HISTORIA (adaptala a tu caso real)</div>
+        <div class="script-text">Hace [tiempo], yo estaba buscando algo para 
+[complementar mis ingresos / tener más libertad / etc.].
+
+No sabía nada de crypto ni de blockchain.
+Tampoco confiaba mucho al principio, igual que vos ahora.
+
+Empecé con ~15 USDT (unos 15 dólares digitales).
+En [tiempo], el sistema me devolvió [monto real tuyo].
+
+No fue magia. Fue entender cómo funciona 
+y ayudar a 2 personas que hicieron lo mismo.
+
+Eso es exactamente lo que te quiero mostrar.</div>
+        <div class="script-note">⟶ Si todavía no tenés tu historia propia, usá la de alguien en tu red (con su permiso). Siempre ser honesto sobre los tiempos y montos reales.</div>
+      </div>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">💡</span>
+        <div class="callout-body">
+          <strong>Por qué funciona la historia personal</strong>
+          <p>Cuando alguien desconfía de "los negocios", no está dudando del sistema. 
+          Está dudando de la PERSONA que se lo ofrece. 
+          Si esa persona habla con honestidad de sus propias dudas iniciales, 
+          la desconfianza se desarma sola.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">6</div>
+      <div class="step-header-content">
+        <div class="step-title">Paso 3: Explicar el Sistema Simple</div>
+        <div class="step-subtitle">La versión para alguien que nunca oyó hablar de crypto</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">Usá analogías de cosas que ya conocen. 
+      Nunca digas "blockchain", "TRC-20" o "wallet" hasta que pregunten. 
+      Primero el concepto, después el término técnico.</p>
+
+      <div class="script-box">
+        <div class="script-label">🗣️ EXPLICACIÓN VERSIÓN BÁSICA (30-60 segundos)</div>
+        <div class="script-text">Imaginate un sistema de cooperación.
+Vos entrás y ayudás a 2 personas a entrar también.
+
+Esas 2 personas hacen lo mismo: 
+cada una ayuda a otras 2.
+
+Es una matriz 2×2: vos en el centro, 
+2 personas tuyas, y 2 de cada una de ellas.
+
+Cuando las posiciones se van completando, 
+el sistema te acredita directamente en tu wallet.
+
+Todo funciona por la red blockchain, 
+los pagos van de wallet a wallet 
+sin que nadie mueva el dinero manualmente.</div>
+        <div class="script-note">⟶ Hacé una pausa después de esto. Preguntá: "¿Tiene sentido hasta acá?" Esperá que respondan antes de continuar.</div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">🗣️ ANALOGÍA DEL ÁRBOL (para personas mayores o muy escépticas)</div>
+        <div class="script-text">Pensalo como plantar un árbol.
+
+Vos ponés la semilla (~15 USDT).
+Ayudás a 2 personas que ponen la misma semilla.
+
+El árbol crece hacia abajo (más personas).
+Los frutos te llegan a vos hacia arriba (los pagos).
+
+La diferencia es que este árbol 
+no depende del clima ni de nadie.
+Depende de la red blockchain 
+que todos pueden verificar en Tronscan.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">7</div>
+      <div class="step-header-content">
+        <div class="step-title">Paso 4: Mostrar Prueba Real</div>
+        <div class="step-subtitle">El momento donde la desconfianza se convierte en curiosidad</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">
+        Una imagen vale más que mil palabras. 
+        Mostrar una transacción real en el momento vale más que una hora de explicación.
+      </p>
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">📸</div>
+          <div class="substep-text">
+            <strong>Mostrá tu wallet con la transacción recibida</strong>
+            <p>Abrí TronLink o Trust Wallet en vivo, 
+            mostrá el historial de transacciones con los montos reales. 
+            Si no tenés nada todavía, pedile a alguien de tu upline que lo muestre.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🔍</div>
+          <div class="substep-text">
+            <strong>Mostrá Tronscan.org (el verificador público)</strong>
+            <p>Abrí tronscan.org en el navegador, ingresá la dirección de wallet 
+            de alguien activo. Esto demuestra en tiempo real que los pagos existen 
+            y que los hace el sistema solo, sin una persona que los controle.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">💬</div>
+          <div class="substep-text">
+            <strong>Mostrá el grupo de equipo activo</strong>
+            <p>Si tenés un grupo de WhatsApp donde la gente celebra retiros y hace preguntas, 
+            mostralo. La actividad de otras personas reales da más confianza que cualquier 
+            presentación profesional.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>La frase para acompañar la prueba</strong>
+          <p>"No te pido que me creas a mí. Mirá esto vos mismo. 
+          Esta transacción la generó el sistema solo, sin que yo toque nada. 
+          Podés verificarla ahora mismo en internet."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">8</div>
+      <div class="step-header-content">
+        <div class="step-title">Paso 5: La Invitación sin Presión</div>
+        <div class="step-subtitle">Cómo cerrar sin que la persona se sienta acorralada</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">
+        El cierre más efectivo no es el más agresivo. 
+        Es el que deja a la persona con ganas de tomar la decisión por su cuenta.
+      </p>
+
+      <div class="script-box">
+        <div class="script-label">🤝 CIERRE SUAVE — PARA PERSONAS INDECISAS</div>
+        <div class="script-text">[Nombre], ya te expliqué cómo funciona 
+y te mostré que es real.
+
+La única forma de saber si esto es para vos 
+es probarlo vos mismo.
+
+El riesgo es ~15 USDT. Unos 15 dólares digitales.
+Si lo ves funcionar, seguís. Si no te convence, 
+aprendiste cómo usar crypto gratis.
+
+¿Qué necesitás saber más para decidirte?</div>
+        <div class="script-note">⟶ La última pregunta es clave. Abre la puerta a objeciones reales que podés resolver, en vez de dejar que la persona se vaya con dudas no dichas.</div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">🤝 CIERRE DIRECTO — PARA PERSONAS DECIDIDAS</div>
+        <div class="script-text">Perfecto. Te mando el link ahora.
+
+El primer paso es crear tu wallet 
+(yo te ayudo paso a paso, es 10 minutos).
+
+Después enviás ~15 USDT y ya estás adentro.
+
+¿Arrancamos?</div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">🤝 CUANDO DICE "LO PIENSO" — NO LO ABANDONES</div>
+        <div class="script-text">Perfecto, no hay apuro.
+
+¿Qué es lo que más dudas te genera todavía?
+(esperá que responda)
+
+Entiendo. Mirá, te dejo el video y el tutorial 
+para que lo veas cuando puedas.
+
+Cualquier pregunta que te surja, escribime 
+cuando quieras, sin compromiso. 🟢</div>
+        <div class="script-note">⟶ Dar material y espacio es más efectivo que seguir explicando. El 60% de las personas que "lo piensan" entran dentro de la semana si reciben buen seguimiento.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 3: OBJECIONES -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="objeciones">
+  <div class="section-num">Sección 3</div>
+  <h2>Las 10 objeciones más comunes<br>y cómo responderlas</h2>
+  <p class="section-intro">
+    Una objeción no es un "no". Es una pregunta disfrazada. 
+    Quien pregunta está interesado. Quien no pregunta, no le importa.
+  </p>
+
+  <table class="obj-table">
+    <thead>
+      <tr>
+        <th style="width:35%">Lo que dicen</th>
+        <th>Lo que respondés</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="objection">❌ "Eso es una pirámide"</td>
+        <td class="response">
+          "Una pirámide necesita siempre nuevos para pagar a los viejos y eventualmente colapsa. 
+          Acá los pagos van directo por la red TRC-20, de wallet a wallet, verificables en Tronscan ahora mismo. 
+          No hay una persona que mueva el dinero. ¿Te muestro la transacción en vivo?"
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "No entiendo de crypto"</td>
+        <td class="response">
+          "Yo tampoco entendía cuando empecé. Solo necesitás saber enviar ~15 dólares digitales, 
+          como mandar un mensaje. Tengo un tutorial de 3 pasos que te lo explica en 10 minutos. 
+          ¿Querés que te lo mande?"
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "No tengo plata ahora"</td>
+        <td class="response">
+          "Entiendo. ~15 USDT es lo mínimo (incluye la posición y las fees de la red), pero si no es el momento, no hay problema. 
+          Guardá el video que te mandé para cuando estés mejor. 
+          Las oportunidades no desaparecen cuando uno está listo."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "¿Me garantizás que gano?"</td>
+        <td class="response">
+          "Nadie te puede garantizar ganancias en ningún negocio. 
+          Lo que sí puedo decirte es que el sistema paga cuando hay movimiento en la red, 
+          y el movimiento depende de lo que hagás vos. 
+          Quien trabaja activamente los primeros 30 días, ve resultados."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "Ya probé MLM antes y me fue mal"</td>
+        <td class="response">
+          "Entiendo y lo respeto. La diferencia con LIME es que esto no es un negocio de ventas ni una empresa tradicional: 
+          es un sistema de cooperación circular. Los pagos van directamente por la red TRC-20, 
+          de wallet a wallet. No hay CEO que decida cuándo pagarte ni empresa que pueda desaparecer con tu dinero."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "No tengo tiempo"</td>
+        <td class="response">
+          "Los primeros 15 días necesitás 1-2 horas. Después el sistema trabaja solo. 
+          Si podés mandar mensajes de WhatsApp, podés hacer esto. 
+          Te doy el sistema completo para que no tengas que inventar nada."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "¿Y vos ganás si yo entro?"</td>
+        <td class="response">
+          "Sí, el sistema me da una pequeña recompensa cuando vos avanzás. 
+          Por eso me conviene ayudarte a que te vaya bien, porque mi crecimiento 
+          depende del tuyo. Somos socios, no te estoy vendiendo algo."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "Lo hablo con mi pareja/familia"</td>
+        <td class="response">
+          "Perfecto. ¿Querés que les mande el video a ellos también para que lo vean juntos? 
+          Así tenés toda la información para decidir bien. 
+          ¿Cuándo crees que lo vas a hablar?"
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "Eso ya está saturado"</td>
+        <td class="response">
+          "La red mundial de LIME tiene espacio para millones de personas. 
+          Lo que sí cambia con el tiempo es en qué parte de la red entrás. 
+          Quien entra antes, llega a niveles más altos más rápido."
+        </td>
+      </tr>
+      <tr>
+        <td class="objection">❌ "¿Para qué necesito un link? ¿Me van a hackear?"</td>
+        <td class="response">
+          "El link solo sirve para registrarte en el sistema y que el contrato 
+          sepa que venís de mi red. No accede a nada tuyo. 
+          Es como un código de descuento: solo te identifica, no te saca nada."
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 4: WHATSAPP -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="whatsapp">
+  <div class="section-num">Sección 4</div>
+  <h2>El sistema de WhatsApp paso a paso</h2>
+  <p class="section-intro">
+    El 80% de tus conversiones van a venir por WhatsApp. 
+    Acá está el flujo exacto de mensajes para cada etapa.
+  </p>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">9</div>
+      <div class="step-header-content">
+        <div class="step-title">Primer mensaje — Despertar curiosidad</div>
+        <div class="step-subtitle">Cómo escribirle a alguien por primera vez sin que se cierre</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+
+      <div class="chat-container">
+        <div class="chat-label">Ejemplo de conversación real 💬</div>
+
+        <div class="chat-row you">
+          <div class="bubble bubble-you">
+            Hola Marcos, ¿cómo andás? Hace tiempo que no hablamos. 
+            Tengo algo que me está yendo bien y quería compartirte por si te interesa. 
+            Sin presión. ¿Estás?
+          </div>
+          <div class="avatar avatar-you">🙋</div>
+        </div>
+
+        <div class="chat-row them">
+          <div class="avatar avatar-them">👤</div>
+          <div class="bubble bubble-them">
+            Hola, bien gracias. ¿De qué se trata?
+          </div>
+        </div>
+
+        <div class="chat-row you">
+          <div class="bubble bubble-you">
+            Es un sistema de economía colaborativa en crypto: arranca con ~15 USDT y cuando se completan 
+            las posiciones te devuelve plata a la wallet directamente. 
+            Yo ya hice mi primer retiro. ¿Te mando un video corto de 2 minutos para que veas?
+          </div>
+          <div class="avatar avatar-you">🙋</div>
+        </div>
+
+        <div class="chat-row them">
+          <div class="avatar avatar-them">👤</div>
+          <div class="bubble bubble-them">
+            Dale, mandámelo.
+          </div>
+        </div>
+
+        <div class="chat-row you">
+          <div class="bubble bubble-you">
+            [Video explicativo]<br><br>
+            Cuando lo veas me decís qué te parece. 
+            Y si tenés preguntas, te respondo todo. 🟢
+          </div>
+          <div class="avatar avatar-you">🙋</div>
+        </div>
+      </div>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">✅</span>
+        <div class="callout-body">
+          <strong>Claves de este primer intercambio</strong>
+          <p>1) Empezás con un saludo humano, no con una oferta.<br>
+          2) Pedís permiso antes de mandar info ("¿estás?").<br>
+          3) Describís brevemente sin tecnicismos.<br>
+          4) Mandás el video y dejás que hable por sí solo.<br>
+          5) Terminás abierto, sin presionar una respuesta.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">10</div>
+      <div class="step-header-content">
+        <div class="step-title">Después de que vio el video</div>
+        <div class="step-subtitle">Los 3 escenarios posibles y cómo manejar cada uno</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">🟢</div>
+          <div class="substep-text">
+            <strong>Escenario A: "Me interesa, cómo empiezo"</strong>
+            <p>Perfecto. Respondés inmediatamente:<br>
+            "Genial! El primer paso es crear tu wallet de USDT. 
+            Te mando el tutorial ahora. Son 3 pasos, en 10 minutos estás listo. 
+            [PDF tutorial] — Avisame cuando lo tengas y seguimos."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🟡</div>
+          <div class="substep-text">
+            <strong>Escenario B: "Tengo dudas / No entendí bien"</strong>
+            <p>Respondés:<br>
+            "Claro, decime qué no quedó claro y te lo explico con mis palabras. 
+            No hay pregunta tonta acá."<br>
+            Después respondés la duda puntual. 
+            Si es muy técnica, ofrecé una llamada corta de 10 minutos.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🔴</div>
+          <div class="substep-text">
+            <strong>Escenario C: No respondió al video</strong>
+            <p>Esperás 24-48 horas. Luego mandás:<br>
+            "[Nombre], ¿pudiste ver el video? Cualquier duda que te surja, acá estoy. 
+            Sin presión."<br>
+            Si tampoco responde, lo dejás. 
+            En 1-2 semanas mandás algo diferente: un screenshot de un retiro real tuyo.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">11</div>
+      <div class="step-header-content">
+        <div class="step-title">El Grupo de WhatsApp de tu Equipo</div>
+        <div class="step-subtitle">Cómo crear y mantener un grupo que genere confianza y acción</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">Un grupo activo es tu mejor herramienta de retención 
+      y de captación. Cuando alguien indeciso ve el grupo en vivo, muchas dudas se disuelven solas.</p>
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">📌</div>
+          <div class="substep-text">
+            <strong>Nombre del grupo</strong>
+            <p>Algo positivo y concreto: "Equipo LIME 🟢 [tu nombre/ciudad]" 
+            o "Red LIME — Libertad Financiera"</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📋</div>
+          <div class="substep-text">
+            <strong>Mensaje de bienvenida fijo (anclado arriba)</strong>
+            <p>"Bienvenido/a al equipo. Acá compartimos avances, dudas y celebraciones. 
+            Regla única: respeto y sin spam. Primero presentate con tu nombre y de dónde sos."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🎉</div>
+          <div class="substep-text">
+            <strong>Celebrar CADA retiro, por pequeño que sea</strong>
+            <p>Cuando alguien recibe su primer pago, aunque sea 9 USDT, 
+            hacé un anuncio en el grupo con screenshot. 
+            Esto motiva a los nuevos y demuestra que el sistema funciona.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📚</div>
+          <div class="substep-text">
+            <strong>Contenido educativo periódico</strong>
+            <p>3 veces por semana compartí: 
+            1 tip sobre crypto, 1 recordatorio de cómo funciona el sistema, 
+            1 caso de éxito o avance. Mantenés el grupo vivo sin bombardear.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🚫</div>
+          <div class="substep-text">
+            <strong>Lo que NO va en el grupo</strong>
+            <p>No mandés promesas de ganancias. No mandés memes irrelevantes. 
+            No discutás con los negativos. No invitás a personas que no pidieron estar ahí.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 5: INSTAGRAM -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="instagram">
+  <div class="section-num">Sección 5</div>
+  <h2>Instagram para principiantes:<br>Atraer sin perseguir</h2>
+  <p class="section-intro">
+    Instagram se usa para que la gente te encuentre a vos, 
+    no para perseguir a nadie. La clave es contenido que genera preguntas.
+  </p>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">12</div>
+      <div class="step-header-content">
+        <div class="step-title">Configurar tu perfil en 20 minutos</div>
+        <div class="step-subtitle">Lo mínimo indispensable para que genere confianza</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">👤</div>
+          <div class="substep-text">
+            <strong>Foto de perfil: tu cara, sonriendo</strong>
+            <p>Sin filtros raros. Sin logos. Sin fotos de paisajes. 
+            La gente necesita ver una cara humana para confiar. 
+            Fondo limpio o natural. Buena iluminación.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📝</div>
+          <div class="substep-text">
+            <strong>Bio en 3 líneas exactas</strong>
+            <p>
+              Línea 1: Lo que hacés → "🟢 Construyo ingresos con crypto"<br>
+              Línea 2: Para quién → "para personas sin experiencia"<br>
+              Línea 3: CTA → "👇 Empezá con ~15 USDT → Link"
+            </p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🔗</div>
+          <div class="substep-text">
+            <strong>Link en bio</strong>
+            <p>Usá Linktree (gratis) con 3 opciones: 
+            1) "Quiero empezar → [tu link LIME]", 
+            2) "¿Cómo crear una wallet? → [tutorial]", 
+            3) "Hablar por WhatsApp → [tu número]"</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">📌</div>
+          <div class="substep-text">
+            <strong>3 Historias destacadas</strong>
+            <p>"¿Qué es LIME?" / "Mi primer retiro" / "Cómo empezar". 
+            Estas son lo primero que ve alguien que llega a tu perfil.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">13</div>
+      <div class="step-header-content">
+        <div class="step-title">Qué publicar y cuándo (sin morir en el intento)</div>
+        <div class="step-subtitle">El plan semanal mínimo para empezar a generar consultas</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">1️⃣</div>
+          <div class="substep-text">
+            <strong>Lunes — Educación (carrusel de 5 slides)</strong>
+            <p>Tema: "¿Qué es USDT y por qué cada vez más gente lo usa?" 
+            Hacelo con Canva (gratis). Texto simple, letra grande, fondo oscuro o claro. 
+            No menciones LIME todavía. Primero educás, después ofrecés.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">2️⃣</div>
+          <div class="substep-text">
+            <strong>Miércoles — Prueba social (Reel 15-30 seg)</strong>
+            <p>Mostrás tu wallet con una transacción recibida. 
+            Voz en off: "Esto llegó mientras hacía otra cosa. Sistema en automático." 
+            No expliques cómo funciona. Solo mostrás que funciona. 
+            Al final: "¿Querés saber más? Respondé INFO en comentarios."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">3️⃣</div>
+          <div class="substep-text">
+            <strong>Viernes — Historia personal (post o story)</strong>
+            <p>"Hace 30 días no sabía nada de crypto. Hoy [resultado tuyo]. 
+            Si yo pude, cualquiera puede." 
+            Con una foto tuya real. Sencillo, sin editar demasiado.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">4️⃣</div>
+          <div class="substep-text">
+            <strong>Diario — Stories rápidas</strong>
+            <p>Una pregunta (encuesta "¿Sabés qué es USDT?" SÍ/NO), 
+            un recordatorio de lo del día, o simplemente mostrar un momento de tu día real. 
+            Las stories crean cercanía con la audiencia.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout callout-amber">
+        <span class="callout-icon">⚠️</span>
+        <div class="callout-body">
+          <strong>Importante: no todo sea LIME</strong>
+          <p>Si el 100% de tu contenido es sobre el negocio, parecés un vendedor desesperado. 
+          Mezclá con contenido de tu vida real, frases motivadoras, o cosas que te gustan. 
+          La gente sigue personas, no publicidades.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">14</div>
+      <div class="step-header-content">
+        <div class="step-title">Los DMs en Instagram — Cómo iniciar sin sonar a spam</div>
+        <div class="step-subtitle">El método para contactar personas nuevas de forma orgánica</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+
+      <div class="callout callout-blue">
+        <span class="callout-icon">🔍</span>
+        <div class="callout-body">
+          <strong>Cómo encontrar prospectos</strong>
+          <p>Buscá en Instagram estos hashtags: 
+          #emprendimiento #ingresoextra #libertadfinanciera #cryptolatam #trabajodesdecasa. 
+          Buscá personas que los usan en sus posts (no los de más seguidores, sino los comunes). 
+          Interactuá primero (like, comentario genuino) y al día siguiente escribís por DM.</p>
+        </div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">📩 DM INICIAL — PRIMER CONTACTO</div>
+        <div class="script-text">Hola [nombre]! 👋
+
+Vi tu post sobre [lo que publicó] y me pareció 
+que quizás tenemos intereses en común.
+
+Yo estoy en algo relacionado con 
+[crypto / ingresos extra / emprendimiento] 
+que me está dando buenos resultados.
+
+¿Te interesaría que te cuente en qué consiste?
+Sin compromiso, solo por si te llama la atención.</div>
+        <div class="script-note">⟶ Este mensaje es para DESPUÉS de haber interactuado con su contenido. Si lo mandás frío sin interacción previa, tendrá mucho menos respuesta.</div>
+      </div>
+
+      <div class="script-box">
+        <div class="script-label">📩 CUANDO ALGUIEN ESCRIBE "INFO" EN TU POST</div>
+        <div class="script-text">¡Hola [nombre]! Gracias por preguntar 🙌
+
+Te cuento rápido:
+
+Es un sistema de economía colaborativa en crypto 
+donde entrás con ~15 USDT, ayudás a 2 personas a entrar,
+y cuando tu matriz 2×2 se completa,
+recibís directo a tu wallet por la red TRC-20.
+
+Los retiros son reales y verificables en blockchain.
+
+¿Tenés wallet USDT o empezamos desde cero?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 6: SEGUIMIENTO -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="seguimiento">
+  <div class="section-num">Sección 6</div>
+  <h2>El seguimiento:<br>La clave que todos abandonan</h2>
+  <p class="section-intro">
+    El 70% de las ventas se pierden por falta de seguimiento. 
+    No por falta de interés del prospecto. 
+    Acá está el sistema para no perder a nadie.
+  </p>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">15</div>
+      <div class="step-header-content">
+        <div class="step-title">Sistema de seguimiento en 5 días</div>
+        <div class="step-subtitle">Qué hacer desde que mandás el primer mensaje hasta el cierre</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <div class="mini-timeline">
+        <div class="tl-item">
+          <div class="tl-day">Día 1</div>
+          <h4>Primer mensaje + video</h4>
+          <p>Mandás el gancho, esperás respuesta, enviás el video. 
+          Dejás que lo procesen. No presionés.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-day">Día 2</div>
+          <h4>Check-in suave</h4>
+          <p>"¿Pudiste ver el video? ¿Qué te pareció?" 
+          Una sola pregunta, sin info adicional.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-day">Día 4</div>
+          <h4>Prueba social nueva</h4>
+          <p>Mandás algo diferente: un screenshot de un retiro de tu red, 
+          o un testimonio de alguien. 
+          Sin preguntar si va a entrar. Solo mostrás que el sistema sigue activo.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-day">Día 7</div>
+          <h4>El cierre o liberación</h4>
+          <p>"[Nombre], sé que estás ocupado/a. 
+          Si en algún momento querés retomar esto, acá estoy. 
+          Si no es para vos, también está bien, no te molesto más." 
+          Paradójicamente, esta frase activa respuestas.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-day">Semana 3+</div>
+          <h4>Re-activación con novedad</h4>
+          <p>Si no respondió nada: volvés en 2-3 semanas con algo concreto nuevo. 
+          "¡Llegué al nivel 3! [screenshot]" o 
+          "Alguien de [ciudad del prospecto] acaba de hacer su primer retiro". 
+          La novedad reactiva conversaciones dormidas.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">16</div>
+      <div class="step-header-content">
+        <div class="step-title">Cómo organizar tus contactos</div>
+        <div class="step-subtitle">Un sistema simple para no olvidar a nadie ni perder el hilo</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <p class="body-intro">No necesitás ninguna app especial. 
+      Un documento en Google Sheets o incluso una nota en el celular alcanza.</p>
+
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">📋</div>
+          <div class="substep-text">
+            <strong>Columnas mínimas en tu lista</strong>
+            <p>Nombre | Plataforma (WA/IG) | Estado | Último contacto | Próximo paso<br>
+            Estados posibles: Nuevo → Con video → Dudas → Listo para entrar → Activo → Inactivo</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">🏷️</div>
+          <div class="substep-text">
+            <strong>Etiquetas en WhatsApp Business</strong>
+            <p>Creá etiquetas: 🟢 Caliente / 🟡 Tibio / 🔴 No interesado / ✅ Activo en red. 
+            Así sabés en segundos en qué estado está cada contacto.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">⏰</div>
+          <div class="substep-text">
+            <strong>Revisá la lista cada 3 días</strong>
+            <p>Dedicá 15 minutos cada 3 días a revisar quién necesita seguimiento. 
+            Es mejor hacer 5 seguimientos bien hechos que 50 mensajes masivos sin alma.</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 7: DUPLICAR -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="duplicar">
+  <div class="section-num">Sección 7</div>
+  <h2>Enseñar a otros a hacer<br>lo mismo que vos</h2>
+  <p class="section-intro">
+    La duplicación es lo que convierte 2 personas en 20 y 20 en 200. 
+    El secreto: enseñar algo tan simple que cualquiera pueda repetirlo.
+  </p>
+
+  <div class="step-block">
+    <div class="step-header" onclick="toggle(this)">
+      <div class="step-num-badge">17</div>
+      <div class="step-header-content">
+        <div class="step-title">El onboarding de cada nuevo miembro</div>
+        <div class="step-subtitle">Lo primero que hacés cuando alguien entra a tu red</div>
+      </div>
+      <div class="step-toggle">›</div>
+    </div>
+    <div class="step-body">
+      <ul class="substep-list">
+        <li>
+          <div class="substep-icon">1️⃣</div>
+          <div class="substep-text">
+            <strong>Mensaje de bienvenida personalizado (dentro de las 2 horas)</strong>
+            <p>"¡Bienvenido [nombre]! Me alegra que estés acá. 
+            Te voy a acompañar en cada paso. 
+            Te mando ahora: 1) cómo funciona tu panel, 2) esta guía que estás leyendo, 
+            3) te agrego al grupo del equipo."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">2️⃣</div>
+          <div class="substep-text">
+            <strong>La primera tarea (en las primeras 24hs)</strong>
+            <p>"Tu primera misión es escribirle a 5 personas HOY, 
+            no para convencerlas, solo para despertar curiosidad con el gancho. 
+            Yo te ayudo con los mensajes."</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">3️⃣</div>
+          <div class="substep-text">
+            <strong>Seguimiento día 3 y día 7</strong>
+            <p>Día 3: "¿Cómo te fue con los mensajes? ¿Qué respuestas tuviste?" 
+            Día 7: "¿Ya tenés a alguien interesado? ¿Qué dudas te surgieron?" 
+            Estar presente los primeros 7 días marca la diferencia entre alguien que queda 
+            y alguien que se va.</p>
+          </div>
+        </li>
+        <li>
+          <div class="substep-icon">4️⃣</div>
+          <div class="substep-text">
+            <strong>Darle esta misma guía</strong>
+            <p>Esta guía que estás leyendo es para que la compartas con cada persona que entra. 
+            Así todos tienen el mismo sistema y la duplicación se vuelve automática.</p>
+          </div>
+        </li>
+      </ul>
+
+      <div class="callout callout-green">
+        <span class="callout-icon">🔑</span>
+        <div class="callout-body">
+          <strong>El secreto de la duplicación</strong>
+          <p>No enseñés todo lo que sabés. Enseñá solo lo que otros pueden hacer. 
+          Cuanto más simple sea el sistema que transmitís, más gente lo replica. 
+          Complejidad mata duplicación.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════════════════════════════════════════ -->
+<!-- SECTION 8: CHECKLIST -->
+<!-- ════════════════════════════════════════════ -->
+<section class="section" id="checklist">
+  <div class="section-num">Sección 8</div>
+  <h2>Tu Checklist<br>de los primeros 30 días</h2>
+  <p class="section-intro">
+    Imprimí esto o guardalo en tu celular. 
+    Cada vez que completás un ítem, tachalo. 
+    El progreso visible genera motivación real.
+  </p>
+
+  <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+
+    <div>
+      <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:16px;">📅 Semana 1 — Preparación</h3>
+      <ul class="checklist">
+        <li><div class="check-box">✓</div>Tengo mi wallet USDT creada y funcionando</li>
+        <li><div class="check-box">✓</div>Hice mi entrada al sistema (N1 activado)</li>
+        <li><div class="check-box">✓</div>Tengo mi link de referido guardado</li>
+        <li><div class="check-box">✓</div>Tengo el video explicativo en mi celular</li>
+        <li><div class="check-box">✓</div>Tengo el PDF tutorial de wallet listo</li>
+        <li><div class="check-box">✓</div>Configuré WhatsApp Business</li>
+        <li><div class="check-box">✓</div>Optimicé mi perfil de Instagram</li>
+        <li><div class="check-box">✓</div>Hice mi lista de 20 contactos warm</li>
+        <li><div class="check-box">✓</div>Mandé el gancho a mis primeros 5 contactos</li>
+        <li><div class="check-box">✓</div>Practiqué explicar el sistema en voz alta</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:16px;">📅 Semana 2 — Activación</h3>
+      <ul class="checklist">
+        <li><div class="check-box">✓</div>Tengo al menos 1 persona activa en mi red</li>
+        <li><div class="check-box">✓</div>Creé el grupo de WhatsApp del equipo</li>
+        <li><div class="check-box">✓</div>Hice mi primer post en Instagram</li>
+        <li><div class="check-box">✓</div>Respondí objeciones por primera vez</li>
+        <li><div class="check-box">✓</div>Contacté 10 personas nuevas</li>
+        <li><div class="check-box">✓</div>Hice seguimiento a los de la semana 1</li>
+        <li><div class="check-box">✓</div>Publiqué en IG 3 veces (edu/prueba/historia)</li>
+        <li><div class="check-box">✓</div>Tengo mi primera prueba de retiro o movimiento</li>
+        <li><div class="check-box">✓</div>Acompañé a mi primer ingreso en su onboarding</li>
+        <li><div class="check-box">✓</div>Identifiqué a mis 3 mejores prospectos activos</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:16px;">📅 Semana 3-4 — Momentum</h3>
+      <ul class="checklist">
+        <li><div class="check-box">✓</div>Tengo 2+ personas activas en mi matriz</li>
+        <li><div class="check-box">✓</div>Matriz 2×2 completa → sistema me pasa a N2</li>
+        <li><div class="check-box">✓</div>Tengo mi primer retiro real documentado</li>
+        <li><div class="check-box">✓</div>Compartí el retiro como prueba social</li>
+        <li><div class="check-box">✓</div>Mis primeros miembros ya invitaron a alguien</li>
+        <li><div class="check-box">✓</div>Hice 4+ posts en Instagram en el mes</li>
+        <li><div class="check-box">✓</div>Mi grupo de equipo tiene 5+ personas activas</li>
+        <li><div class="check-box">✓</div>Puedo explicar el sistema sin leer nada</li>
+        <li><div class="check-box">✓</div>Les di esta guía a todos los de mi red</li>
+        <li><div class="check-box">✓</div>Tengo mi plan para el mes 2 definido</li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 style="font-size:16px; font-weight:700; color:var(--ink); margin-bottom:16px;">🎯 Indicadores de Éxito</h3>
+      <ul class="checklist">
+        <li><div class="check-box">⭐</div>10 personas contactadas por semana</li>
+        <li><div class="check-box">⭐</div>1-2 entradas nuevas por semana</li>
+        <li><div class="check-box">⭐</div>3 posts por semana en Instagram</li>
+        <li><div class="check-box">⭐</div>Seguimiento a cada prospecto cada 3 días</li>
+        <li><div class="check-box">⭐</div>Grupo activo con al menos 1 mensaje diario</li>
+        <li><div class="check-box">⭐</div>Cada nuevo ingreso recibe esta guía en 24hs</li>
+      </ul>
+
+      <div class="callout callout-amber" style="margin-top:20px;">
+        <span class="callout-icon">⚡</span>
+        <div class="callout-body">
+          <strong>La regla de los 30 días</strong>
+          <p>Si hacés todo esto durante 30 días seguidos, 
+          el mes 2 empieza a correr solo. 
+          Si lo hacés 3 días y parás 5, empezás de cero. 
+          La constancia vale más que el talento.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<div class="cta-section">
+  <h2>Ahora solo queda<br>un paso</h2>
+  <p>
+    Leíste la guía. Tenés los scripts. Tenés las respuestas. 
+    El único paso que falta es mandar el primer mensaje hoy, 
+    no mañana.
+  </p>
+  <div class="cta-pills">
+    <a href="#antes" class="cta-pill">↑ Releer desde el inicio</a>
+    <a href="#objeciones" class="cta-pill outline">Ver objeciones</a>
+    <a href="#checklist" class="cta-pill outline">Mi checklist</a>
+  </div>
+  <p style="margin-top:48px; font-size:12px; color:#444; max-width:500px; margin-left:auto; margin-right:auto;">
+    Guía elaborada para el sistema LIME / ULIME · Para uso interno del equipo. 
+    Los resultados dependen del esfuerzo y constancia individual de cada persona.
+  </p>
+</div>
+
+<script>
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const arrow = header.querySelector('.step-toggle');
+  const isOpen = body.classList.contains('open');
+  
+  // Cerrar todos
+  document.querySelectorAll('.step-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.step-toggle').forEach(a => a.classList.remove('open'));
+  
+  // Abrir el clickeado si estaba cerrado
+  if (!isOpen) {
+    body.classList.add('open');
+    arrow.classList.add('open');
+    // Scroll suave
+    setTimeout(() => {
+      header.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }, 100);
+  }
+}
+
+// Abrir el primero por defecto
+document.querySelector('.step-body').classList.add('open');
+document.querySelector('.step-toggle').classList.add('open');
+
+// Highlight nav al hacer scroll
+const sections = document.querySelectorAll('section[id], .section[id]');
+const navLinks = document.querySelectorAll('.nav-link');
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(section => {
+    const sectionTop = section.offsetTop - 80;
+    if (window.scrollY >= sectionTop) {
+      current = section.getAttribute('id');
+    }
+  });
+  
+  navLinks.forEach(link => {
+    link.style.color = '';
+    link.style.borderBottomColor = '';
+    if (link.getAttribute('href') === '#' + current) {
+      link.style.color = 'var(--lime)';
+      link.style.borderBottomColor = 'var(--lime)';
+    }
+  });
+});
+</script>
+
+</body>
+</html>

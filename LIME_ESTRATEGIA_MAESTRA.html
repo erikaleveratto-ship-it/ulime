@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIME | ULIME — Estrategia Maestra de Expansión Global</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500;600&display=swap');
+
+  :root {
+    --lime: #C8F135;
+    --lime-dark: #9BBF1A;
+    --black: #0A0A0A;
+    --dark: #111111;
+    --dark2: #1A1A1A;
+    --dark3: #222222;
+    --gray: #555;
+    --light: #F0F0E8;
+    --white: #FAFAFA;
+    --gold: #F4C842;
+    --red: #FF3B3B;
+    --teal: #00E5CC;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--black);
+    color: var(--light);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #0A0A0A 0%, #0f1a00 50%, #0A0A0A 100%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    width: 700px; height: 700px;
+    background: radial-gradient(circle, rgba(200,241,53,0.12) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 4px;
+    color: var(--lime);
+    text-transform: uppercase;
+    border: 1px solid rgba(200,241,53,0.3);
+    padding: 6px 18px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+  }
+
+  .hero h1 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(52px, 10vw, 120px);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -3px;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .hero h1 span { color: var(--lime); }
+
+  .hero-sub {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(16px, 3vw, 28px);
+    font-weight: 600;
+    color: var(--gray);
+    letter-spacing: 2px;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  .hero-desc {
+    max-width: 680px;
+    font-size: 17px;
+    color: #888;
+    line-height: 1.8;
+    margin-bottom: 50px;
+  }
+
+  .stat-row {
+    display: flex;
+    gap: 48px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .stat {
+    text-align: center;
+  }
+
+  .stat-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 36px;
+    font-weight: 700;
+    color: var(--lime);
+    display: block;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: #666;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  /* SECTIONS */
+  section {
+    padding: 80px 20px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 5px;
+    color: var(--lime);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: block;
+  }
+
+  h2 {
+    font-family: 'Syne', sans-serif;
+    font-size: clamp(32px, 5vw, 56px);
+    font-weight: 800;
+    line-height: 1.05;
+    letter-spacing: -2px;
+    margin-bottom: 40px;
+    color: var(--white);
+  }
+
+  h3 {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--lime);
+    margin: 32px 0 12px;
+  }
+
+  p { color: #aaa; margin-bottom: 16px; line-height: 1.8; }
+
+  .divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(200,241,53,0.3), transparent);
+    margin: 0 auto;
+    max-width: 1100px;
+  }
+
+  /* CARDS GRID */
+  .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; }
+  .grid-4 { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+
+  .card {
+    background: var(--dark2);
+    border: 1px solid rgba(200,241,53,0.08);
+    border-radius: 4px;
+    padding: 28px;
+    transition: all 0.3s ease;
+  }
+
+  .card:hover {
+    border-color: rgba(200,241,53,0.3);
+    background: var(--dark3);
+    transform: translateY(-2px);
+  }
+
+  .card-icon {
+    font-size: 28px;
+    margin-bottom: 14px;
+    display: block;
+  }
+
+  .card h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 8px;
+  }
+
+  .card p { font-size: 14px; margin: 0; color: #777; }
+
+  /* LEVEL TABLE */
+  .level-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    margin: 24px 0;
+  }
+
+  .level-table th {
+    background: var(--dark3);
+    color: var(--lime);
+    padding: 12px 16px;
+    text-align: left;
+    font-size: 11px;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border-bottom: 1px solid rgba(200,241,53,0.2);
+  }
+
+  .level-table td {
+    padding: 12px 16px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    color: #bbb;
+    vertical-align: top;
+  }
+
+  .level-table tr:hover td { background: rgba(200,241,53,0.03); }
+
+  .lime-val { color: var(--lime); font-weight: 700; }
+  .gold-val { color: var(--gold); }
+  .teal-val { color: var(--teal); }
+
+  /* HIGHLIGHT BOX */
+  .highlight {
+    background: linear-gradient(135deg, rgba(200,241,53,0.05), rgba(200,241,53,0.02));
+    border-left: 3px solid var(--lime);
+    padding: 24px 28px;
+    margin: 24px 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .highlight p { color: #ccc; margin: 0; }
+
+  .alert {
+    background: rgba(255,59,59,0.08);
+    border-left: 3px solid var(--red);
+    padding: 20px 24px;
+    margin: 20px 0;
+    border-radius: 0 4px 4px 0;
+  }
+
+  .alert p { color: #ff8888; margin: 0; font-size: 14px; }
+
+  /* STEPS */
+  .steps { counter-reset: step; }
+  .step {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    align-items: flex-start;
+  }
+
+  .step-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--lime);
+    background: rgba(200,241,53,0.1);
+    border: 1px solid rgba(200,241,53,0.3);
+    width: 36px; height: 36px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+    font-weight: 700;
+  }
+
+  .step-content h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .step-content p { font-size: 14px; color: #777; margin: 0; }
+
+  /* FUNNEL */
+  .funnel { text-align: center; }
+  .funnel-level {
+    background: var(--dark2);
+    border: 1px solid rgba(200,241,53,0.1);
+    padding: 16px 24px;
+    margin: 8px auto;
+    border-radius: 3px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.2s;
+  }
+
+  .funnel-level:hover { border-color: rgba(200,241,53,0.4); }
+
+  .funnel-label { font-family: 'Space Mono', monospace; font-size: 12px; color: #666; }
+  .funnel-value { font-family: 'Space Mono', monospace; font-size: 14px; color: var(--lime); font-weight: 700; }
+  .funnel-payout { font-family: 'Space Mono', monospace; font-size: 13px; color: var(--gold); }
+
+  /* SCRIPT BOXES */
+  .script-box {
+    background: #0f1800;
+    border: 1px solid rgba(200,241,53,0.15);
+    border-radius: 4px;
+    padding: 24px;
+    margin: 16px 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+    line-height: 1.8;
+    color: #c8f135cc;
+    position: relative;
+  }
+
+  .script-box::before {
+    content: attr(data-label);
+    position: absolute;
+    top: -10px;
+    left: 20px;
+    background: var(--black);
+    padding: 0 8px;
+    font-size: 10px;
+    letter-spacing: 3px;
+    color: var(--lime);
+    text-transform: uppercase;
+  }
+
+  /* USER SIMULATION */
+  .user-card {
+    background: var(--dark2);
+    border: 1px solid rgba(255,255,255,0.06);
+    border-radius: 4px;
+    padding: 20px 24px;
+    margin-bottom: 16px;
+  }
+
+  .user-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+
+  .user-name {
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    color: var(--white);
+    font-size: 15px;
+  }
+
+  .user-status {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 2px;
+    letter-spacing: 1px;
+  }
+
+  .status-ok { background: rgba(200,241,53,0.15); color: var(--lime); }
+  .status-conflict { background: rgba(255,59,59,0.15); color: var(--red); }
+  .status-warn { background: rgba(244,200,66,0.15); color: var(--gold); }
+
+  .user-detail { font-size: 13px; color: #666; line-height: 1.7; }
+  .user-detail strong { color: #aaa; }
+
+  /* AUTOMATION */
+  .flow-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .flow-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .flow-box {
+    background: var(--dark3);
+    border: 1px solid rgba(200,241,53,0.12);
+    border-radius: 3px;
+    padding: 14px 20px;
+    flex: 1;
+  }
+
+  .flow-box h5 {
+    font-family: 'Syne', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 4px;
+  }
+
+  .flow-box p { font-size: 12px; color: #555; margin: 0; }
+
+  .flow-arrow {
+    color: var(--lime);
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  /* INSTAGRAM */
+  .ig-post {
+    background: var(--dark2);
+    border: 1px solid rgba(200,241,53,0.08);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+
+  .ig-header {
+    background: linear-gradient(90deg, #C8F135, #9BBF1A);
+    padding: 12px 20px;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--black);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+
+  .ig-body { padding: 20px; }
+  .ig-body p { font-size: 14px; line-height: 1.7; }
+
+  .ig-hashtags {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    color: rgba(200,241,53,0.6);
+    margin-top: 12px;
+  }
+
+  /* MULTIPLIER TABLE */
+  .mult-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    margin: 24px 0;
+  }
+
+  .mult-table th {
+    background: rgba(200,241,53,0.1);
+    color: var(--lime);
+    padding: 10px 14px;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    border: 1px solid rgba(200,241,53,0.15);
+  }
+
+  .mult-table td {
+    padding: 10px 14px;
+    border: 1px solid rgba(255,255,255,0.04);
+    color: #bbb;
+    text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 13px;
+  }
+
+  .mult-table .total-row td { background: rgba(200,241,53,0.06); color: var(--lime); font-weight: 700; }
+
+  /* BIG NUMBER */
+  .big-number {
+    font-family: 'Space Mono', monospace;
+    font-size: clamp(40px, 8vw, 80px);
+    font-weight: 700;
+    color: var(--lime);
+    line-height: 1;
+  }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 40px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 12px;
+    top: 0; bottom: 0;
+    width: 1px;
+    background: linear-gradient(to bottom, var(--lime), transparent);
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 36px;
+  }
+
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -32px;
+    top: 6px;
+    width: 8px; height: 8px;
+    background: var(--lime);
+    border-radius: 50%;
+  }
+
+  .timeline-week {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    color: var(--lime);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+
+  .timeline-item h4 {
+    font-family: 'Syne', sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--white);
+    margin-bottom: 6px;
+  }
+
+  .timeline-item p { font-size: 14px; color: #666; margin: 0; }
+
+  /* RISK METER */
+  .risk-row {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 14px;
+  }
+
+  .risk-label { font-size: 14px; color: #aaa; width: 200px; flex-shrink: 0; }
+
+  .risk-bar-bg {
+    flex: 1;
+    height: 6px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .risk-bar { height: 100%; border-radius: 3px; }
+  .risk-low { background: var(--lime); }
+  .risk-med { background: var(--gold); }
+  .risk-high { background: var(--red); }
+
+  .risk-score {
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    width: 40px;
+    text-align: right;
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--dark2);
+    border-top: 1px solid rgba(200,241,53,0.1);
+    text-align: center;
+    padding: 40px 20px;
+    margin-top: 80px;
+  }
+
+  footer p { font-size: 13px; color: #444; }
+  footer strong { color: var(--lime); }
+
+  /* TAGS */
+  .tag {
+    display: inline-block;
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 2px;
+    margin: 3px;
+    letter-spacing: 1px;
+  }
+
+  .tag-lime { background: rgba(200,241,53,0.12); color: var(--lime); border: 1px solid rgba(200,241,53,0.2); }
+  .tag-gold { background: rgba(244,200,66,0.12); color: var(--gold); border: 1px solid rgba(244,200,66,0.2); }
+  .tag-teal { background: rgba(0,229,204,0.12); color: var(--teal); border: 1px solid rgba(0,229,204,0.2); }
+  .tag-red  { background: rgba(255,59,59,0.12); color: var(--red); border: 1px solid rgba(255,59,59,0.2); }
+
+  .full-width-section {
+    background: var(--dark2);
+    border-top: 1px solid rgba(200,241,53,0.06);
+    border-bottom: 1px solid rgba(200,241,53,0.06);
+    padding: 80px 20px;
+  }
+
+  .full-width-inner { max-width: 1100px; margin: 0 auto; }
+
+  .number-highlight {
+    font-family: 'Space Mono', monospace;
+    color: var(--lime);
+    font-weight: 700;
+  }
+
+  @media (max-width: 600px) {
+    .stat-row { gap: 28px; }
+    .risk-label { width: 150px; font-size: 12px; }
+    .level-table { font-size: 11px; }
+    .level-table td, .level-table th { padding: 8px 10px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-badge">Análisis Maestro & Estrategia de Expansión Global</div>
+  <h1>LIME<br><span>ULIME</span></h1>
+  <div class="hero-sub">Economía Colaborativa · Crypto · Cooperación en Red</div>
+  <p class="hero-desc">
+    Análisis profundo del sistema de economía circular, matriz de cooperación 2×2, 
+    estrategia 10×10, automatización por celular y guía táctica para expansión global sin límites.
+  </p>
+  <div class="stat-row">
+    <div class="stat">
+      <span class="stat-num">11</span>
+      <span class="stat-label">Niveles de Red</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">$29.7K</span>
+      <span class="stat-label">Retorno Total USDT</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">130+</span>
+      <span class="stat-label">Posiciones Clonadas</span>
+    </div>
+    <div class="stat">
+      <span class="stat-num">10×10</span>
+      <span class="stat-label">Estructura de Duplicación</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 1: QUÉ ES -->
+<section>
+  <span class="section-tag">01 — Análisis de la Empresa</span>
+  <h2>¿Qué es LIME / ULIME?</h2>
+
+  <div class="grid-2">
+    <div>
+      <p>
+        <strong style="color:#fff">LIME / ULIME</strong> es un <strong style="color:var(--lime)">sistema de economía colaborativa y circular</strong> 
+        basado en cooperación entre personas, usando <strong style="color:var(--lime)">USDT TRC-20</strong> 
+        (red Tron) como medio de intercambio. Utiliza una moneda interna llamada <strong style="color:var(--lime)">uLime</strong>, 
+        donde 1 uLime = 1 USDT.
+      </p>
+      <p>
+        Funciona con una <strong style="color:#fff">matriz de cooperación 2×2</strong>: 
+        cada persona ayuda a otras dos a entrar, y esas dos hacen lo mismo, 
+        generando una <strong style="color:#fff">red de apoyo con crecimiento matemático</strong> a 11 niveles de profundidad. 
+        El crecimiento es predecible y verificable porque opera sobre blockchain. 
+        Incluye un componente educativo llamado <strong style="color:var(--teal)">Lime Academy</strong>.
+      </p>
+    </div>
+    <div>
+      <div class="highlight">
+        <p><strong style="color:var(--lime)">Principio clave:</strong> No es un negocio de ventas ni multinivel tradicional. 
+        Es una <strong style="color:#fff">red de cooperación mutua</strong>: cada miembro que avanza 
+        ayuda a que otros avancen. El sistema se autofinancia con las ganancias de cada nivel 
+        para acceder al siguiente. Nunca necesitás poner más dinero después de la entrada inicial.</p>
+      </div>
+      <div class="highlight">
+        <p><strong style="color:var(--lime)">Tecnología:</strong> Transacciones directas en la red TRC-20 (Tron). 
+        Pagos peer-to-peer instantáneos en USDT. Sin intermediarios bancarios. 
+        Cada movimiento es verificable públicamente en blockchain. Global por naturaleza.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Características Distintivas</h3>
+  <div class="grid-4">
+    <div class="card">
+      <span class="card-icon">🔐</span>
+      <h4>Blockchain Transparente</h4>
+      <p>Todos los movimientos verificables en la red Tron TRC-20</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🔄</span>
+      <h4>Autoavance de Niveles</h4>
+      <p>El sistema acumula fondos y avanza al nivel siguiente automáticamente</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🤝</span>
+      <h4>Matriz de Cooperación 2×2</h4>
+      <p>Cada persona ayuda a otras dos. Crecimiento matemático y duplicable</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🌐</span>
+      <h4>Sin Restricción Geográfica</h4>
+      <p>Cualquier persona con wallet USDT puede participar desde cualquier país</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">📚</span>
+      <h4>Lime Academy</h4>
+      <p>Plataforma educativa incluida en el ecosistema</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">💸</span>
+      <h4>Retiro via Bono</h4>
+      <p>Las ganancias se retiran a través del saldo de bono acumulado</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">⚡</span>
+      <h4>Entrada Mínima ~15 USDT</h4>
+      <p>Nivel 1 requiere aprox. 15 USDT (10 USDT posición + fees de red TRC-20)</p>
+    </div>
+    <div class="card">
+      <span class="card-icon">🏆</span>
+      <h4>PR (Partner Reward)</h4>
+      <p>Recompensa directa por socios invitados personalmente</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 2: PLAN DE COMPENSACIÓN -->
+<section>
+  <span class="section-tag">02 — Plan de Compensación Completo</span>
+  <h2>Los 11 Niveles<br>Desglosados</h2>
+
+  <p>La siguiente tabla muestra la estructura matemática completa del sistema ULIME. 
+  Cada nivel se activa automáticamente con las ganancias del anterior.</p>
+
+  <table class="level-table">
+    <thead>
+      <tr>
+        <th>Nivel</th>
+        <th>Activación (USDT)</th>
+        <th>Retiro Posible (uLime)</th>
+        <th>PR / Sponsor</th>
+        <th>Clones Generados</th>
+        <th>Acumula Para Nivel Sig.</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="lime-val">N1</span></td>
+        <td>~15 USDT <span style="color:#555;font-size:11px">(10 + fees TRC-20)</span></td>
+        <td class="teal-val">9 uLime</td>
+        <td>—</td>
+        <td>—</td>
+        <td>27 uLime → N2</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N2</span></td>
+        <td>27 USDT</td>
+        <td class="teal-val">5 uLime</td>
+        <td class="gold-val">4 uLime</td>
+        <td>4 en N1</td>
+        <td>63 uLime → N3</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N3</span></td>
+        <td>63 USDT</td>
+        <td class="teal-val">54 uLime</td>
+        <td class="gold-val">9 uLime</td>
+        <td>4 en N1 + 1 en N2</td>
+        <td>126 uLime → N4</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N4</span></td>
+        <td>126 USDT</td>
+        <td class="teal-val">72 uLime</td>
+        <td class="gold-val">18 uLime</td>
+        <td>8 en N1 + 2 en N2</td>
+        <td>288 uLime → N5</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N5</span></td>
+        <td>288 USDT</td>
+        <td class="teal-val">144 uLime</td>
+        <td class="gold-val">54 uLime</td>
+        <td>16 en N1 + 1 en N2 + 1 en N3</td>
+        <td>720 uLime → N6</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N6</span></td>
+        <td>720 USDT</td>
+        <td class="teal-val">720 uLime</td>
+        <td class="gold-val">243 uLime</td>
+        <td>32 en N1 + 1 en N3 + 1 en N4</td>
+        <td>1,440 uLime → N7</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N7</span></td>
+        <td>1,440 USDT</td>
+        <td class="teal-val">3,000 uLime</td>
+        <td class="gold-val">300 uLime</td>
+        <td>64 en N1 + 1 en N4 + 1 en N5</td>
+        <td>900 uLime → N8</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N8</span></td>
+        <td>900 USDT</td>
+        <td class="teal-val">—</td>
+        <td>—</td>
+        <td>Acumulativo</td>
+        <td>2,700 uLime → N9</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N9</span></td>
+        <td>2,700 USDT</td>
+        <td class="teal-val">—</td>
+        <td>—</td>
+        <td>Acumulativo</td>
+        <td>5,400 uLime → N10</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N10</span></td>
+        <td>5,400 USDT</td>
+        <td class="teal-val">3,000 uLime</td>
+        <td class="gold-val">720 uLime</td>
+        <td>1 en N7 + 1 en N8</td>
+        <td>10,000 uLime → N11</td>
+      </tr>
+      <tr>
+        <td><span class="lime-val">N11</span></td>
+        <td>10,000 USDT</td>
+        <td class="teal-val">20,000 uLime</td>
+        <td class="gold-val">1,348 uLime</td>
+        <td>Máximo nivel</td>
+        <td>Ciclo completo: 29,700 USDT</td>
+      </tr>
+      <tr class="total-row">
+        <td colspan="2">TOTAL INVERTIDO</td>
+        <td colspan="2">21,673 USDT</td>
+        <td colspan="2">RETORNO TOTAL: ~29,700 USDT + PR acumulado</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <p>
+      <strong style="color:var(--lime)">⚡ Insight clave:</strong> A partir del Nivel 7, el sistema 
+      genera <strong>3,000 USDT de retiro</strong> en un solo nivel. Con la estructura correcta y 
+      duplicación activa, alcanzar N7 puede hacerse en 30-90 días con una red de 10 participantes activos.
+      Cada transacción es verificable en tiempo real en la red Tron (TRC-20).
+    </p>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 3: SIMULACIÓN 20 USUARIOS -->
+<div class="full-width-section">
+<div class="full-width-inner">
+  <span class="section-tag">03 — Simulación Estratégica</span>
+  <h2>Prueba con 20 Usuarios<br>Casos Reales</h2>
+  <p style="max-width:700px;">Análisis de 20 perfiles de usuarios con diferentes comportamientos, 
+  conflictos potenciales y resoluciones estratégicas.</p>
+
+  <!-- USERS 1-5 -->
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 1 — El Networker Activo</span>
+      <span class="user-status status-ok">✓ ÓPTIMO</span>
+    </div>
+    <div class="user-detail">
+      <strong>Perfil:</strong> Tiene red previa. Entra en N1 (~15 USDT). Invita 2 personas en 48hs.<br>
+      <strong>Resultado:</strong> En 7 días llena N1 (matriz 2×2), el sistema avanza a N2 automáticamente. En 21 días llega a N3.<br>
+      <strong>Ingreso semana 4:</strong> ~54 USDT de retiro + 9 USDT PR × 3 socios = 81 USDT.<br>
+      <strong>Estrategia:</strong> Enfocar en llevar sus 3 mejores referidos al N2 para recibir clones en N1.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 2 — El Escéptico Financiero</span>
+      <span class="user-status status-warn">⚠ REENCUADRE NECESARIO</span>
+    </div>
+    <div class="user-detail">
+      <strong>Conflicto:</strong> "¿Cómo sé que no es una estafa? No entiendo blockchain."<br>
+      <strong>Solución:</strong> Mostrar el explorador de Tron (Tronscan.org) con las transacciones en vivo de tu upline. 
+      Demostrar que los pagos viajan directamente por la red TRC-20, sin nadie que los controle ni intermediarios.<br>
+      <strong>Script de cierre:</strong> "Entra con lo mínimo (~15 USDT). Si en 30 días no recuperas, me lo dices. 
+      Pero ya habrás visto cómo funciona la cadena."<br>
+      <strong>Resultado:</strong> Convierte a escéptico en embajador si su primera experiencia es positiva.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 3 — El Impaciente</span>
+      <span class="user-status status-warn">⚠ GESTIÓN DE EXPECTATIVAS</span>
+    </div>
+    <div class="user-detail">
+      <strong>Conflicto:</strong> "¿Por qué no puedo retirar todo de una vez desde el N1?"<br>
+      <strong>Solución:</strong> Explicar el ciclo: "El sistema acumula para autocomprarte el nivel superior, 
+      que te genera más. Es como reinvertir dividendos automáticamente." Mostrar la proyección: 
+      N1 = 9 USDT retirado. Vs. N7 = 3,000 USDT retirado.<br>
+      <strong>Técnica:</strong> Usar comparativa visual: 9 USDT vs 3,000 USDT con la misma estructura.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 4 — El Sin-Red (Principiante)</span>
+      <span class="user-status status-ok">✓ SISTEMA CLONA POR ÉL</span>
+    </div>
+    <div class="user-detail">
+      <strong>Perfil:</strong> No tiene contactos en crypto. Entra tarde a tu estructura.<br>
+      <strong>Ventaja oculta:</strong> Los clones de tus niveles superiores (N5, N6) lo benefician con posiciones 
+      que se llenan desde arriba. Puede ganar sin invitar directamente.<br>
+      <strong>Estrategia:</strong> Posicionarlo debajo de un usuario activo (Usuario 1). 
+      Las posiciones que llenan desde arriba le generan movimiento pasivo.<br>
+      <strong>Mensaje:</strong> "El sistema trabaja para ti mientras tu upline crece."
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 5 — El que quiere entrar en N5+ directo</span>
+      <span class="user-status status-lime">✓ ALTA INVERSIÓN</span>
+    </div>
+    <div class="user-detail">
+      <strong>Perfil:</strong> Tiene capital. Quiere saltarse niveles bajos.<br>
+      <strong>Nota:</strong> La estructura requiere pasar nivel a nivel. Sin embargo puede <strong>acelerar</strong> 
+      poniendo a 3 personas en N1 y pagando sus entradas para llenar rápido.<br>
+      <strong>Resultado con capital:</strong> Invertir para 3 personas (~45 USDT total, ~15 cada una) y llenar N1 en 24hs. 
+      El sistema avanza solo al N2, N3... acelerando su trayecto al N7 (3,000 USDT retiro).<br>
+      <strong>ROI proyectado:</strong> ~45 USDT inversión inicial → N3 en 5-7 días → 54 USDT retiro.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 6 — El Abandonador (entra y no invita)</span>
+      <span class="user-status status-conflict">✗ RIESGO DE PÉRDIDA</span>
+    </div>
+    <div class="user-detail">
+      <strong>Conflicto:</strong> Entra en N1, no hace nada durante 2 semanas. Su posición no se llena.<br>
+      <strong>Solución:</strong> Sistema de seguimiento en WhatsApp Day 1, 3, 7, 14. 
+      Recordatorio con contenido de motivación + caso de éxito de alguien en su misma ciudad.<br>
+      <strong>Táctica de rescate:</strong> "Te pongo debajo de uno de mis activos para que veas movimiento real."
+      Mostrar notificación de transacción recibida para motivarlo a actuar.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 7 — El Influencer Local (1K-10K seguidores)</span>
+      <span class="user-status status-ok">✓ MULTIPLICADOR EXPONENCIAL</span>
+    </div>
+    <div class="user-detail">
+      <strong>Perfil:</strong> Tiene audiencia en Instagram o TikTok. Se une con escepticismo inicial.<br>
+      <strong>Estrategia:</strong> Darle acceso anticipado. Mostrar su primer retiro en pantalla. 
+      Pedirle que documente su "experimento" públicamente.<br>
+      <strong>Resultado:</strong> Un post suyo puede traer 20-50 personas en 24hs a tu estructura.<br>
+      <strong>Oferta:</strong> "Tú invitas desde tus redes, yo gestiono el soporte y onboarding de tus referidos."
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 8 — El que no tiene crypto (sin wallet)</span>
+      <span class="user-status status-warn">⚠ FRICCIÓN TÉCNICA</span>
+    </div>
+    <div class="user-detail">
+      <strong>Conflicto:</strong> "No sé cómo comprar USDT ni qué es una wallet."<br>
+      <strong>Solución:</strong> Tutorial de 3 pasos en video corto (menos de 3 minutos):
+      1) Descargar TronLink o Trust Wallet. 
+      2) Comprar USDT en Binance/local exchange. 
+      3) Enviar a wallet personal.<br>
+      <strong>Herramienta:</strong> Crear guía PDF "Tu primera wallet en 10 minutos" y enviar por WhatsApp.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 9 — El Líder que duplica a 10</span>
+      <span class="user-status status-ok">✓ EL OBJETIVO PRIMARIO</span>
+    </div>
+    <div class="user-detail">
+      <strong>Perfil:</strong> Hace su N1, invita 2. Cada uno de sus 2 invita otros 2. 
+      En 2 niveles ya tiene 6 personas activas en red de cooperación.<br>
+      <strong>Resultado matemático:</strong> Con 10 directos activos, sus clones de N5 en adelante 
+      se llenan casi automáticamente.<br>
+      <strong>Ingreso proyectado mes 2:</strong> Con 10 personas en N1 (30 USDT cada uno) y cadena activa, 
+      puede acumular suficiente para llegar a N5 (288 USDT → 144 USDT retiro + 54 PR = 198 USDT libres).<br>
+      <strong>Clave:</strong> Este es el perfil que DEBES replicar con cada nuevo ingreso.
+    </div>
+  </div>
+
+  <div class="user-card">
+    <div class="user-header">
+      <span class="user-name">👤 Usuario 10 — El Negativo Público</span>
+      <span class="user-status status-conflict">✗ GESTIÓN DE REPUTACIÓN</span>
+    </div>
+    <div class="user-detail">
+      <strong>Conflicto:</strong> Publica en sus redes "esto es una pirámide" antes de entender.<br>
+      <strong>Estrategia de respuesta:</strong> No atacar. Responder públicamente con datos: 
+      "Una pirámide colapsa cuando no entran más personas. Acá los pagos van directo por la red TRC-20, 
+      verificables en Tronscan. Cualquiera puede verlos."<br>
+      <strong>Diferenciación clave:</strong> LIME es una red de cooperación circular. Los pagos son entre personas, 
+      directos y transparentes en blockchain. No hay caja central, no hay quien retenga fondos.<br>
+      <strong>Táctica:</strong> Invitarlo a verificar una transacción en vivo en Tronscan antes de opinar.
+    </div>
+  </div>
+
+  <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 16px;">
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U11 — El Profesional Crypto</span><span class="user-status status-ok">✓ FAST TRACK</span></div>
+      <div class="user-detail">Ya sabe de USDT/TRC-20. Entra directo. Puede explicar el sistema mejor que tú. <strong>Estrategia:</strong> Posicionarlo como co-lider. Darle kit de materiales para que forme su propia línea.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U12 — El Estudiante Sin Dinero</span><span class="user-status status-warn">⚠ BARRERA ECONÓMICA</span></div>
+      <div class="user-detail">Solo tiene 5 USDT. <strong>Solución:</strong> Propuesta de co-inversión: tú pones los 10 USDT, él trae 2 referidos y se divide el retiro 50/50 hasta que pueda reinvertir solo.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U13 — El Multitarea Ocupado</span><span class="user-status status-ok">✓ AUTOMATIZAR TODO</span></div>
+      <div class="user-detail">No tiene tiempo. <strong>Estrategia:</strong> Darle el chatbot de WhatsApp preconfigurado. Su único rol: compartir su link de referido. El sistema y el bot hacen el resto.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U14 — El Mamá/Papá en Casa</span><span class="user-status status-ok">✓ CANDIDATO IDEAL</span></div>
+      <div class="user-detail">Tiene WhatsApp activo todo el día. Grupos familiares y de amigos. <strong>Ventaja:</strong> Red de confianza alta. Script personalizado: "Desde el celular, 10 minutos al día."</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U15 — El que pide garantías</span><span class="user-status status-conflict">✗ OBJECIÓN CLÁSICA</span></div>
+      <div class="user-detail">"¿Me garantizas ganancias?" <strong>Respuesta:</strong> "El sistema garantiza que si hay movimiento en tu red, los pagos van directo a tu wallet por la red TRC-20. Nadie garantiza velocidad. Lo que sí garantizo es que ~15 USDT es el riesgo mínimo para ver si funciona para ti."</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U16 — El de Otro País</span><span class="user-status status-ok">✓ VENTAJA GLOBAL</span></div>
+      <div class="user-detail">México, Colombia, Venezuela, España, USA. USDT no tiene fronteras. <strong>Estrategia:</strong> Crear grupos regionales por país. Un líder por país que gestione soporte local.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U17 — El Vendedor Nato</span><span class="user-status status-ok">✓ MÁXIMO POTENCIAL</span></div>
+      <div class="user-detail">Trabaja en ventas. Entiende el cierre. <strong>Táctica:</strong> Darle los scripts de WhatsApp e Instagram. En 1 semana puede traer 5-8 personas activas. Perfil para volverlo líder de línea.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U18 — El Desconfiado del Sponsor</span><span class="user-status status-warn">⚠ TRANSPARENCIA TOTAL</span></div>
+      <div class="user-detail">"¿Tú ganas si yo entro?" <strong>Respuesta honesta:</strong> "Sí, el sistema me da PR cuando tú avanzas. Por eso te apoyo activamente. Mi ganancia depende de tu éxito. Somos socios, no tú mi cliente."</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U19 — El que entra y refiere mal</span><span class="user-status status-conflict">✗ CALIDAD DE RED</span></div>
+      <div class="user-detail">Invita personas que no pueden sostener ni 10 USDT. <strong>Solución:</strong> Capacitarlo en calificación de prospectos. Criterio mínimo: persona con acceso a 10-30 USDT y disposición a aprender.</div>
+    </div>
+
+    <div class="user-card">
+      <div class="user-header"><span class="user-name">👤 U20 — El Estratega que llega a N11</span><span class="user-status status-ok">✓ CASO DE ÉXITO MÁXIMO</span></div>
+      <div class="user-detail">Paciente, constante, duplica correctamente. Llega a N11. <strong>Retorno:</strong> 29,700 USDT total + PR acumulado de toda su línea. Se convierte en caso de éxito documentado para atraer nuevos líderes.</div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<!-- SECTION 4: ESTRATEGIA 10x10 -->
+<section>
+  <span class="section-tag">04 — Estructura de Duplicación</span>
+  <h2>Sistema 10×10:<br>Red a Profundidad</h2>
+
+  <p>La estrategia de duplicación 10×10 significa que cada persona que entra 
+  se enfoca en construir exactamente <strong style="color:var(--lime)">10 directos activos</strong>, 
+  cada uno de los cuales hace lo mismo a <strong style="color:var(--lime)">10 niveles de profundidad</strong>.</p>
+
+  <table class="mult-table">
+    <thead>
+      <tr>
+        <th>Generación</th>
+        <th>Personas</th>
+        <th>Inversión N1 (USDT)</th>
+        <th>Retiro Potencial (USDT)</th>
+        <th>Tu PR estimado</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>Tú</td><td>1</td><td>~15</td><td>9</td><td>—</td></tr>
+      <tr><td>G1 (tus directos)</td><td>10</td><td>~150</td><td>90</td><td>40 USDT</td></tr>
+      <tr><td>G2</td><td>100</td><td>~1,500</td><td>900</td><td>~400</td></tr>
+      <tr><td>G3</td><td>1,000</td><td>~15,000</td><td>9,000</td><td>~2,000</td></tr>
+      <tr><td>G4</td><td>10,000</td><td>~150,000</td><td>90,000</td><td>~10,000</td></tr>
+      <tr><td>G5</td><td>100,000</td><td>~1,500,000</td><td>900,000</td><td>~50,000+</td></tr>
+      <tr class="total-row">
+        <td>G1→G5 total</td>
+        <td>111,111</td>
+        <td>~1,666,665 USDT en red</td>
+        <td>999,999 USDT</td>
+        <td>MILLONES en PR</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="highlight">
+    <p><strong style="color:var(--lime)">Realismo vs Potencial:</strong> No necesitas 100,000 personas. 
+    Con solo G1 + G2 activos (110 personas reales), tu red genera más de 9,000 USDT en movimiento 
+    y tus clones de niveles superiores se activan automáticamente. 
+    <strong>El sistema trabaja exponencialmente con números pequeños.</strong></p>
+  </div>
+
+  <h3>Reglas del 10×10 para Duplicación Real</h3>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-content"><h4>Cierra 10, no 100</h4><p>Tu objetivo inicial: 10 personas activas en N1. Solo 10. Con wallet funcionando, USDT invertido, y entendiendo el sistema básico.</p></div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-content"><h4>Cada uno ayuda a 2</h4><p>Antes de buscar 10, cada nuevo ingreso debe llenar sus 2 posiciones de la matriz 2×2. Enseña eso primero. Es simple: ayudá a 2 personas a entrar.</p></div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-content"><h4>El upline llena al downline</h4><p>Cuando avanzas a N5+, tus clones en N1 llenan posiciones de personas debajo tuyo. Úsalo como argumento de captación.</p></div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-content"><h4>Profundidad, no anchura</h4><p>Es mejor tener 3 líderes que duplican, que 30 personas que no hacen nada. Identifica tus 3 campeones en la primera semana.</p></div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-content"><h4>Momentum de 21 días</h4><p>Los primeros 21 días son críticos. Seguimiento diario. Grupo de WhatsApp activo. Celebrar cada retiro con screenshot compartido.</p></div></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 5: INSTAGRAM -->
+<section>
+  <span class="section-tag">05 — Estrategia Instagram</span>
+  <h2>Instagram de Bajo Costo<br>con Cierres en Cadena</h2>
+
+  <p>Sistema de contenido orgánico para atraer prospectos calificados sin gastar en publicidad.</p>
+
+  <h3>Perfil Optimizado</h3>
+  <div class="grid-2">
+    <div>
+      <div class="card">
+        <h4>Nombre de usuario</h4>
+        <p>@TuNombre.LIME o @Crypto.TuNombre — que combine identidad personal + categoría</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h4>Bio estratégica (máx 150 chars)</h4>
+        <p>🟢 Construyo libertad financiera con crypto<br>
+        📈 Sistema de economía colaborativa 24/7<br>
+        👇 Empezá con ~15 USDT → Link</p>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <h4>Foto de perfil</h4>
+        <p>Cara visible + sonriente + fondo limpio. NO logos ni animaciones. La confianza se construye con identidad humana.</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h4>Link en bio</h4>
+        <p>Usar Linktree o Beacons con: 1) Tu link de referido LIME 2) Tutorial wallet 3) Contacto directo WhatsApp</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Calendario de Contenido Semanal (0 gasto publicitario)</h3>
+  <div class="grid-3">
+    <div class="ig-post">
+      <div class="ig-header">Lunes — Educación</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">Post carrusel (5-7 slides):</strong><br>
+        "¿Qué es USDT y por qué es el dinero del futuro?" o 
+        "Cómo funciona una matriz de 3 en crypto" — NO menciones LIME todavía. 
+        Educa primero, vende después.</p>
+        <div class="ig-hashtags">#crypto #USDT #libertadfinanciera #dinerodigital #blockchain</div>
+      </div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-header">Miércoles — Prueba Social</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">Reel corto (15-30 seg):</strong><br>
+        Pantalla de wallet con transacción recibida. Voz en off: 
+        "Esto llegó mientras dormía. Sistema corriendo en automático. 
+        Quieres saber cómo? Responde 'INFO' en comentarios."</p>
+        <div class="ig-hashtags">#ingresosPasivos #cryptoganancias #trabajadesdelacasa</div>
+      </div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-header">Viernes — Historia Personal</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">Post o historia:</strong><br>
+        "Hace 30 días no sabía nada de crypto. Hoy [resultado concreto]. 
+        No necesitás experiencia, necesitás 10 minutos y ~15 USDT." 
+        CTA: "Escribime al DM con 'EMPEZAR'."</p>
+        <div class="ig-hashtags">#testimonio #emprendimiento #economiacolaborativa #LIME</div>
+      </div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-header">Sábado — Engagement</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">Story con encuesta:</strong><br>
+        "¿Sabías que podés ganar USDT desde el celular?" SI / NO. 
+        Todos los que voten "NO" → mensaje automático con explicación corta + link.</p>
+      </div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-header">Domingo — Caso de Éxito</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">Post de celebración:</strong><br>
+        Foto o story de alguien en tu red que hizo su primer retiro. 
+        Con su permiso: nombre, país, monto. 
+        Pregunta al pie: "¿Querés ser el próximo? Link en bio."</p>
+        <div class="ig-hashtags">#casodeexito #ULIME #criptoredes #libertad</div>
+      </div>
+    </div>
+    <div class="ig-post">
+      <div class="ig-header">Diario — DMs Proactivos</div>
+      <div class="ig-body">
+        <p><strong style="color:#fff">10-20 DMs por día</strong> a personas que interactúan con hashtags de:
+        #emprendimiento #ingresoextra #cryptolatam #trabajodesdecasa. 
+        Mensaje inicial NO vendedor — solo curiosidad.</p>
+      </div>
+    </div>
+  </div>
+
+  <h3>Script de DM Instagram (no vendedor)</h3>
+  <div class="script-box" data-label="MENSAJE INICIAL — DM INSTAGRAM">
+Hola [Nombre] 👋
+
+Vi que te interesa el tema de [emprendimiento / crypto / ingresos extra].
+
+Yo estoy trabajando algo que arranca con ~15 USDT y funciona 
+en cooperación con otras personas en blockchain. Sin jefes, sin horarios.
+
+¿Te gustaría que te cuente cómo funciona? 
+No te voy a pedir nada, solo te explico. 🟢
+  </div>
+
+  <div class="script-box" data-label="SEGUIMIENTO — DM DÍA 2 (si no responde)">
+[Nombre], ayer te mandé info sobre algo interesante.
+
+Hoy uno de mis socios retiró [monto real] de su wallet.
+
+Si en algún momento quieres saber cómo, acá estoy. 
+Sin presión. 💚
+  </div>
+
+  <div class="script-box" data-label="CIERRE — DM CUANDO PIDE INFO">
+Perfecto! Te lo explico en 3 líneas:
+
+1️⃣ Entrás con ~15 USDT (TRC-20) → comprás tu posición
+2️⃣ Ayudás a 2 personas a entrar → tu matriz 2×2 se completa
+3️⃣ Cada vez que se llena una posición → recibís en tu wallet
+
+Sin jefes. Sin horarios. Sin productos que vender.
+Solo una red que crece sola.
+
+¿Tenés wallet USDT o empezamos desde cero?
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 6: AUTOMATIZACIÓN CELULAR -->
+<div class="full-width-section">
+<div class="full-width-inner">
+  <span class="section-tag">06 — Automatización Total</span>
+  <h2>Sistema Completo<br>Solo con tu Celular</h2>
+
+  <p style="max-width:700px; margin-bottom:40px;">Todo el ciclo de captación, cierre, onboarding y seguimiento 
+  puede ejecutarse únicamente desde el smartphone. Aquí el flujo completo.</p>
+
+  <h3>Stack de Apps (100% gratuitas)</h3>
+  <div class="grid-4">
+    <div class="card"><span class="card-icon">💬</span><h4>WhatsApp Business</h4><p>Respuestas rápidas, etiquetas, mensajes automáticos de bienvenida</p></div>
+    <div class="card"><span class="card-icon">📸</span><h4>Instagram</h4><p>Contenido orgánico + DMs para captación diaria de prospectos</p></div>
+    <div class="card"><span class="card-icon">🔗</span><h4>Linktree / Beacons</h4><p>Hub de links en bio con link de referido + materiales</p></div>
+    <div class="card"><span class="card-icon">🎬</span><h4>CapCut</h4><p>Edición de reels rápidos con transacciones + testimonios</p></div>
+    <div class="card"><span class="card-icon">🖼️</span><h4>Canva Mobile</h4><p>Diseño de carruseles educativos y posts sin experiencia</p></div>
+    <div class="card"><span class="card-icon">💰</span><h4>TronLink / Trust Wallet</h4><p>Wallet para gestionar USDT y mostrar transacciones en vivo</p></div>
+    <div class="card"><span class="card-icon">📊</span><h4>Google Sheets</h4><p>Tracking simple de prospectos, estados y seguimientos</p></div>
+    <div class="card"><span class="card-icon">🤖</h4><h4>Manychat (IG)</h4><p>Automatiza respuestas de "INFO" en comentarios de posts</p></div>
+  </div>
+
+  <h3>Flujo Automatizado Completo</h3>
+  <div class="flow-container">
+    <div class="flow-item">
+      <div class="flow-box"><h5>🎯 ATRACCIÓN (Instagram)</h5><p>Post educativo → comentario "INFO" → Manychat responde automático con PDF guía</p></div>
+      <span class="flow-arrow">↓</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-box"><h5>💬 CALIFICACIÓN (DM Instagram)</h5><p>Script de 3 mensajes → pregunta si tiene wallet → derivar a WhatsApp si tiene interés</p></div>
+      <span class="flow-arrow">↓</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-box"><h5>📲 ONBOARDING (WhatsApp Business)</h5><p>Mensaje de bienvenida automático → envío de tutorial wallet → link de entrada al sistema</p></div>
+      <span class="flow-arrow">↓</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-box"><h5>🏁 ACTIVACIÓN (Red TRC-20)</h5><p>Envían ~15 USDT a su posición → transacción confirmada en blockchain Tron → bienvenida al grupo</p></div>
+      <span class="flow-arrow">↓</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-box"><h5>👥 GRUPO DE EQUIPO (WhatsApp)</h5><p>Grupo activo con: celebraciones de retiros, soporte, recordatorios diarios, materiales</p></div>
+      <span class="flow-arrow">↓</span>
+    </div>
+    <div class="flow-item">
+      <div class="flow-box"><h5>🔄 DUPLICACIÓN</h5><p>Cada nuevo miembro recibe el mismo sistema y kit de materiales. Se repite el ciclo.</p></div>
+    </div>
+  </div>
+
+  <h3 style="margin-top:48px;">Mensajes Automáticos WhatsApp Business</h3>
+  <div class="grid-2">
+    <div class="script-box" data-label="MENSAJE BIENVENIDA AUTOMÁTICO">
+¡Hola! 👋 Gracias por contactarme.
+
+Soy [Tu nombre] y trabajo con LIME/ULIME,
+un sistema de red en blockchain con USDT.
+
+Te voy a enviar en unos segundos:
+📎 Guía de primeros pasos
+🎥 Video explicativo corto
+💬 Responde "LISTO" cuando lo hayas visto
+    </div>
+    <div class="script-box" data-label="RESPUESTA RÁPIDA — OBJECIÓN PRECIO">
+Entiendo. ~15 USDT es lo mínimo para entrar: 
+la posición + las fees de red TRC-20.
+
+La realidad es que es el costo de ver 
+el sistema funcionando en vivo.
+
+Si lo ves funcionar y no te convence,
+aprendiste crypto por ~15 USDT. Si funciona, 
+empezás a construir algo real.
+
+¿Qué preferís: arriesgar 15 o no saber nunca? 🟢
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- SECTION 7: TIMELINE LANZAMIENTO -->
+<section>
+  <span class="section-tag">07 — Plan de Acción</span>
+  <h2>Timeline de<br>Lanzamiento</h2>
+
+  <div class="timeline">
+    <div class="timeline-item">
+      <div class="timeline-week">DÍA 1-3</div>
+      <h4>Preparación del Arsenal</h4>
+      <p>Configura WhatsApp Business con mensajes automáticos. Crea perfil IG optimizado. 
+      Prepara kit: PDF tutorial wallet, video corto explicativo, link de referido. 
+      Identifica 10 contactos warm (conocidos con interés en dinero/crypto).
+      Tené listos ~15 USDT por persona (incluye fees de red TRC-20).</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-week">DÍA 4-7</div>
+      <h4>Primeros 3 Cierres</h4>
+      <p>Contacta tus 10 warm leads por WhatsApp. Meta: 2 activos en N1 (tu matriz 2×2 completa). 
+      Crea el grupo de equipo. Primer post en Instagram. 
+      Primeros DMs proactivos a personas con hashtags de emprendimiento.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-week">SEMANA 2</div>
+      <h4>N1 → N2 Automático</h4>
+      <p>Con 2 personas activas en tu matriz, el sistema te mueve a N2 automáticamente. 
+      Documenta el momento. Screenshot de la transacción. 
+      Compártelo en tu IG como prueba social. Esto atrae 3-5 consultas nuevas.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-week">SEMANA 3-4</div>
+      <h4>Primeros 10 Directos</h4>
+      <p>Meta: 10 personas activas bajo ti. Capacita a los primeros 3 para que 
+      cada uno cierre 3 más. Sistema de grupo activo con celebraciones diarias. 
+      Contenido en IG: 5-7 posts. Primeros testimonios reales.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-week">MES 2</div>
+      <h4>Alcance N3-N4 y Líderes Emergentes</h4>
+      <p>Identifica tus 2-3 mejores duplicadores. Dales kit de líder completo. 
+      Tu red ya tiene 30-100 personas. Los clones de N3-N4 empiezan a llenarse. 
+      PR (partner reward) llega regularmente a tu wallet.</p>
+    </div>
+    <div class="timeline-item">
+      <div class="timeline-week">MES 3-6</div>
+      <h4>N5-N7: El Punto de Inflexión</h4>
+      <p>N7 = 3,000 USDT de retiro en un nivel. Con red de 100+ personas activas, 
+      el avance se acelera por clones. Primer retiro significativo. 
+      Nuevo caso de éxito documentado. Expansión a otros países.</p>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 8: RIESGOS -->
+<section>
+  <span class="section-tag">08 — Análisis de Riesgos</span>
+  <h2>Riesgos Reales<br>y Mitigaciones</h2>
+
+  <div class="grid-2">
+    <div>
+      <h3>Matriz de Riesgo</h3>
+      <div class="risk-row">
+        <span class="risk-label">Red inactiva (downline no duplica)</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-med" style="width:65%"></div></div>
+        <span class="risk-score" style="color:var(--gold)">MEDIO</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Volatilidad USDT (estable)</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-low" style="width:15%"></div></div>
+        <span class="risk-score" style="color:var(--lime)">BAJO</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Regulación cripto local</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-med" style="width:40%"></div></div>
+        <span class="risk-score" style="color:var(--gold)">MEDIO</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Saturación del mercado cercano</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-low" style="width:20%"></div></div>
+        <span class="risk-score" style="color:var(--lime)">BAJO</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Fallo técnico del contrato</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-low" style="width:10%"></div></div>
+        <span class="risk-score" style="color:var(--lime)">MUY BAJO</span>
+      </div>
+      <div class="risk-row">
+        <span class="risk-label">Abandono por expectativas altas</span>
+        <div class="risk-bar-bg"><div class="risk-bar risk-high" style="width:70%"></div></div>
+        <span class="risk-score" style="color:var(--red)">ALTO</span>
+      </div>
+    </div>
+    <div>
+      <h3>Mitigaciones Clave</h3>
+      <div class="alert">
+        <p><strong>⚠ Mayor riesgo real:</strong> El abandono por expectativas mal gestionadas. 
+        La gente entra esperando ganar rápido sin esfuerzo. 
+        Siempre ser honesto: el sistema requiere duplicación activa las primeras semanas.</p>
+      </div>
+      <div class="card" style="margin-top:16px;">
+        <h4>✅ Gestión de Expectativas</h4>
+        <p>Siempre decir: "Los primeros 30 días son de trabajo activo. 
+        Del mes 2 en adelante, el sistema empieza a correr más solo."</p>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <h4>✅ Momento de Entrada/Salida</h4>
+        <p>La lógica de "cuándo salir": Retiras ganancia de N5-N7 en adelante. 
+        Antes de N5, es mejor reinvertir para acelerar. 
+        Salida parcial recomendada: retirar 50%, reinvertir 50%.</p>
+      </div>
+      <div class="card" style="margin-top:12px;">
+        <h4>✅ Diversificación</h4>
+        <p>No poner más de lo que puedes perder inicialmente. 
+        Tratar los primeros niveles como "costo de aprendizaje". 
+        Escalar solo con ganancias del propio sistema.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SECTION 9: SCRIPTS COMPLETOS -->
+<section>
+  <span class="section-tag">09 — Scripts Completos</span>
+  <h2>Librería de Scripts<br>WhatsApp + Instagram</h2>
+
+  <h3>Objeciones y Respuestas</h3>
+
+  <div class="script-box" data-label="OBJECIÓN: ES UNA PIRÁMIDE">
+Entiendo la duda, me la hacen seguido.
+
+Una pirámide necesita que siempre haya 
+nuevos abajo para pagar a los de arriba.
+
+LIME funciona diferente: es una red de 
+cooperación circular. Cada persona ayuda 
+a otras dos. Los pagos van DIRECTO a tu 
+wallet por la red TRC-20 en USDT.
+
+Podés verificar cada pago en Tronscan.org 
+en tiempo real. No hay nadie que mueva ese dinero.
+
+¿Querés que te muestre una transacción en vivo? 🔍
+  </div>
+
+  <div class="script-box" data-label="OBJECIÓN: NO ENTIENDO DE CRYPTO">
+Perfecto, yo tampoco entendía hace [tiempo].
+
+Solo necesitás 3 cosas:
+📱 Un celular
+💳 Poder enviar ~15 USDT (incluye fees de red TRC-20)
+⏰ 15 minutos para aprender a usar la wallet
+
+Tengo un tutorial de 3 pasos que lo explica 
+hasta sin experiencia. ¿Te lo mando? 🟢
+  </div>
+
+  <div class="script-box" data-label="CIERRE FINAL — CUANDO DICEN 'LO PIENSO'">
+[Nombre], entiendo. 
+
+La única forma de saber si esto es para vos
+es verlo funcionar con tu propio dinero.
+
+~15 USDT es lo mínimo (la posición + las fees 
+de red). Si en 30 días no ves resultados, 
+aprendiste crypto gratis.
+Si funciona, tenés un sistema para crecer.
+
+¿Cuándo querés arrancar? 🚀
+  </div>
+
+  <h3>Script de Presentación Grupal (WhatsApp grupo)</h3>
+  <div class="script-box" data-label="PRESENTACIÓN PARA GRUPO NUEVO">
+Bienvenidos al equipo LIME 🟢
+
+Acá van las reglas simples:
+
+✅ Compartir SOLO con personas que preguntan
+✅ Celebrar cada retiro (con screenshot)
+✅ Pedir ayuda cuando tienen dudas
+✅ Aprender el sistema antes de enseñarlo
+
+Lo que NO hacemos:
+❌ Presionar a nadie
+❌ Prometer ganancias exactas
+❌ Spam masivo sin calidad
+
+Somos una red de personas que se ayudan 
+a construir libertad financiera real. 💚
+
+Primero: presentate con nombre + país + objetivo.
+  </div>
+</section>
+
+<!-- SECTION 10: RESUMEN EJECUTIVO -->
+<div class="full-width-section">
+<div class="full-width-inner">
+  <span class="section-tag">10 — Resumen Ejecutivo</span>
+  <h2>El Cuadro Completo:<br>Tu Negocio LIME</h2>
+
+  <div class="grid-3">
+    <div>
+      <h3>Lo que ES</h3>
+      <div class="card">
+        <p style="color:#ccc; font-size:15px; line-height:1.9;">
+          Sistema de <strong style="color:var(--lime)">economía colaborativa y circular</strong> en blockchain. 
+          Matriz de cooperación 2×2 a 11 niveles. 
+          Moneda interna uLime (1:1 USDT). 
+          Autoavance de niveles con ganancias acumuladas. 
+          Pagos directos peer-to-peer en red TRC-20. 
+          Componente educativo (Academy). 
+          Global, sin restricción geográfica.
+        </p>
+      </div>
+    </div>
+    <div>
+      <h3>Lo que NECESITÁS</h3>
+      <div class="card">
+        <p style="color:#ccc; font-size:15px; line-height:1.9;">
+          📱 Solo tu celular.<br>
+          💬 WhatsApp Business + Instagram.<br>
+          💰 ~15 USDT para empezar (posición + fees).<br>
+          👥 2 personas para llenar tu matriz 2×2.<br>
+          ⏰ 1-2 horas diarias primeras semanas.<br>
+          🧠 Sistema de scripts listos para usar.
+        </p>
+      </div>
+    </div>
+    <div>
+      <h3>Lo que PODÉS GANAR</h3>
+      <div class="card">
+        <p style="color:#ccc; font-size:15px; line-height:1.9;">
+          N1→N3: <span class="number-highlight">9-54 USDT</span> retiro inicial.<br>
+          N5-N6: <span class="number-highlight">144-720 USDT</span> por nivel.<br>
+          N7: <span class="number-highlight">3,000 USDT</span> de retiro.<br>
+          N11: <span class="number-highlight">29,700 USDT</span> total.<br>
+          PR continuo: según tamaño de tu red.<br>
+          Con 10×10 activo: <span class="number-highlight">ilimitado</span>.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="highlight" style="margin-top:40px;">
+    <p style="font-size:16px; line-height:2;">
+      <strong style="color:var(--lime); font-size:18px;">La ecuación del éxito en LIME:</strong><br>
+      <strong style="color:#fff">2 personas activas × duplicación constante × paciencia estratégica = red exponencial.</strong><br>
+      Tu trabajo real dura 60-90 días intensos. Después, el sistema trabaja para vos. 
+      El riesgo total es de ~15 USDT. El potencial, con una red de 100 personas activas, 
+      supera los 5,000-20,000 USDT mensuales en niveles medios-altos. 
+      <strong style="color:var(--lime)">El momento de entrar es cuando el sistema es nuevo en tu mercado.</strong>
+    </p>
+  </div>
+</div>
+</div>
+
+<footer>
+  <p>Documento de análisis estratégico — <strong>LIME / ULIME</strong><br>
+  Elaborado con información de presentaciones oficiales del sistema.<br>
+  <strong>Advertencia:</strong> Todo investment en criptomonedas conlleva riesgo. 
+  Este documento es para fines informativos y estratégicos.</p>
+</footer>
+
+</body>
+</html>

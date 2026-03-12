@@ -1,0 +1,2891 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LIME × Instagram — Guía Completa Paso a Paso</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:ital,wght@0,300;0,400;0,600;0,700;0,800;0,900;1,400&family=Fira+Code:wght@400;500;600&display=swap');
+
+:root {
+  --bg: #0D0D0D;
+  --bg2: #141414;
+  --bg3: #1C1C1C;
+  --bg4: #242424;
+  --lime: #AAFF00;
+  --lime2: #88CC00;
+  --lime3: #CCFF55;
+  --limebg: rgba(170,255,0,0.07);
+  --limeborder: rgba(170,255,0,0.2);
+  --white: #F5F5F0;
+  --gray: #888;
+  --gray2: #555;
+  --pink: #FF6B9D;
+  --orange: #FF9500;
+  --blue: #4FC3F7;
+  --purple: #CE93D8;
+  --red: #FF5252;
+  --redbg: rgba(255,82,82,0.08);
+  --orangebg: rgba(255,149,0,0.08);
+  --bluebg: rgba(79,195,247,0.08);
+  --r: 8px;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Nunito', sans-serif;
+  font-size: 15px;
+  line-height: 1.7;
+  overflow-x: hidden;
+}
+
+/* ── SIDEBAR NAV ── */
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 260px;
+  background: var(--bg2);
+  border-right: 1px solid rgba(255,255,255,0.05);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  overflow-y: auto;
+  padding: 28px 0;
+  z-index: 50;
+  scrollbar-width: none;
+}
+.sidebar::-webkit-scrollbar { display: none; }
+
+.sidebar-logo {
+  padding: 0 24px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  margin-bottom: 16px;
+}
+
+.sidebar-logo .ig-icon {
+  font-size: 28px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.sidebar-logo h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  letter-spacing: 2px;
+  color: var(--lime);
+  line-height: 1.1;
+}
+
+.sidebar-logo p {
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.4;
+}
+
+.nav-section-label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gray2);
+  padding: 16px 24px 6px;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 24px;
+  text-decoration: none;
+  color: var(--gray);
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+}
+
+.nav-item:hover, .nav-item.active {
+  color: var(--lime);
+  background: var(--limebg);
+  border-left-color: var(--lime);
+}
+
+.nav-item .nav-num {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  color: var(--gray2);
+  width: 20px;
+  flex-shrink: 0;
+}
+
+/* ── MAIN CONTENT ── */
+.main {
+  margin-left: 260px;
+  flex: 1;
+  min-width: 0;
+}
+
+/* ── HERO ── */
+.hero {
+  background: linear-gradient(135deg, #0D0D0D 0%, #111800 40%, #0D0D0D 100%);
+  padding: 80px 56px;
+  border-bottom: 1px solid rgba(170,255,0,0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: '📸';
+  position: absolute;
+  right: 80px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 120px;
+  opacity: 0.06;
+  pointer-events: none;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--limebg);
+  border: 1px solid var(--limeborder);
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--lime);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(48px, 7vw, 88px);
+  line-height: 0.95;
+  letter-spacing: 2px;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.hero h1 span { color: var(--lime); }
+
+.hero-sub {
+  font-size: 18px;
+  color: var(--gray);
+  margin-bottom: 40px;
+  max-width: 560px;
+  line-height: 1.6;
+}
+
+.hero-stats {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.hero-stat .num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 42px;
+  color: var(--lime);
+  line-height: 1;
+  display: block;
+}
+
+.hero-stat .lbl {
+  font-size: 11px;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-weight: 700;
+}
+
+/* ── PAGE SECTIONS ── */
+.page-section {
+  padding: 64px 56px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.section-num-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 80px;
+  color: rgba(170,255,0,0.1);
+  line-height: 0.8;
+  flex-shrink: 0;
+  letter-spacing: 1px;
+}
+
+.section-title-block {}
+
+.section-kicker {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--lime);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.section-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(28px, 4vw, 44px);
+  letter-spacing: 1px;
+  line-height: 1.05;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.section-desc {
+  font-size: 15px;
+  color: var(--gray);
+  max-width: 580px;
+  line-height: 1.7;
+}
+
+/* ── STEP CARDS ── */
+.step-card {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r);
+  margin-bottom: 20px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+
+.step-card:hover { border-color: rgba(170,255,0,0.2); }
+
+.step-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  cursor: pointer;
+  user-select: none;
+  padding: 0;
+}
+
+.step-card-accent {
+  width: 5px;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+.accent-lime { background: var(--lime); }
+.accent-pink { background: var(--pink); }
+.accent-orange { background: var(--orange); }
+.accent-blue { background: var(--blue); }
+.accent-purple { background: var(--purple); }
+
+.step-card-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 36px;
+  color: var(--lime);
+  padding: 20px 20px;
+  width: 72px;
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1;
+}
+
+.step-card-info {
+  flex: 1;
+  padding: 18px 16px 18px 0;
+}
+
+.step-card-title {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 3px;
+  line-height: 1.3;
+}
+
+.step-card-sub {
+  font-size: 12px;
+  color: var(--gray);
+}
+
+.step-card-tag {
+  margin-right: 20px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.tag-lime { background: var(--limebg); color: var(--lime); border: 1px solid var(--limeborder); }
+.tag-pink { background: rgba(255,107,157,0.1); color: var(--pink); border: 1px solid rgba(255,107,157,0.2); }
+.tag-orange { background: var(--orangebg); color: var(--orange); border: 1px solid rgba(255,149,0,0.2); }
+.tag-blue { background: var(--bluebg); color: var(--blue); border: 1px solid rgba(79,195,247,0.2); }
+
+.step-card-chevron {
+  padding: 0 20px 0 0;
+  color: var(--gray2);
+  font-size: 18px;
+  transition: transform 0.3s;
+  flex-shrink: 0;
+}
+
+.step-card-chevron.open { transform: rotate(90deg); color: var(--lime); }
+
+.step-body {
+  display: none;
+  padding: 0 24px 28px 24px;
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.step-body.open { display: block; }
+
+/* ── COPY BOX ── */
+.copy-box {
+  background: #080808;
+  border: 1px solid rgba(170,255,0,0.15);
+  border-radius: var(--r);
+  margin: 20px 0;
+  overflow: hidden;
+}
+
+.copy-box-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: rgba(170,255,0,0.06);
+  border-bottom: 1px solid rgba(170,255,0,0.1);
+}
+
+.copy-box-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--lime);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.copy-btn {
+  background: var(--limebg);
+  border: 1px solid var(--limeborder);
+  color: var(--lime);
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1px;
+  padding: 4px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-transform: uppercase;
+}
+
+.copy-btn:hover { background: var(--lime); color: #000; }
+.copy-btn.copied { background: var(--lime); color: #000; }
+
+.copy-box-text {
+  font-family: 'Fira Code', monospace;
+  font-size: 13px;
+  line-height: 1.9;
+  color: #b8f060;
+  padding: 20px 20px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.copy-box-note {
+  padding: 10px 16px;
+  background: rgba(0,0,0,0.3);
+  border-top: 1px solid rgba(255,255,255,0.04);
+  font-size: 12px;
+  color: #556633;
+  font-style: italic;
+  line-height: 1.5;
+}
+
+/* ── INFO BOXES ── */
+.info-box {
+  border-radius: var(--r);
+  padding: 16px 20px;
+  margin: 16px 0;
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.info-box-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+
+.info-box-body strong {
+  display: block;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 5px;
+}
+
+.info-box-body p {
+  font-size: 13px;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.info-lime { background: var(--limebg); border: 1px solid var(--limeborder); }
+.info-lime strong { color: var(--lime); }
+.info-lime p { color: #9acc44; }
+
+.info-orange { background: var(--orangebg); border: 1px solid rgba(255,149,0,0.2); }
+.info-orange strong { color: var(--orange); }
+.info-orange p { color: #cc7700; }
+
+.info-red { background: var(--redbg); border: 1px solid rgba(255,82,82,0.2); }
+.info-red strong { color: var(--red); }
+.info-red p { color: #cc3333; }
+
+.info-blue { background: var(--bluebg); border: 1px solid rgba(79,195,247,0.2); }
+.info-blue strong { color: var(--blue); }
+.info-blue p { color: #4499bb; }
+
+/* ── GRID ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 20px 0; }
+
+.mini-card {
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r);
+  padding: 18px;
+}
+
+.mini-card-icon { font-size: 24px; margin-bottom: 10px; display: block; }
+.mini-card h4 { font-size: 14px; font-weight: 800; color: var(--white); margin-bottom: 5px; }
+.mini-card p { font-size: 12px; color: var(--gray); line-height: 1.5; margin: 0; }
+
+/* ── DO/DONT ── */
+.dodont { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0; }
+
+.do-col, .dont-col {
+  border-radius: var(--r);
+  padding: 20px;
+}
+
+.do-col { background: rgba(170,255,0,0.04); border: 1px solid rgba(170,255,0,0.15); }
+.dont-col { background: rgba(255,82,82,0.04); border: 1px solid rgba(255,82,82,0.15); }
+
+.do-col h4 { color: var(--lime); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+.dont-col h4 { color: var(--red); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 14px; }
+
+.do-col ul, .dont-col ul { list-style: none; }
+.do-col li, .dont-col li { font-size: 13px; padding: 6px 0; display: flex; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.04); line-height: 1.5; }
+.do-col li:last-child, .dont-col li:last-child { border-bottom: none; }
+.do-col li { color: #aaddaa; }
+.dont-col li { color: #ddaaaa; }
+
+/* ── IG MOCKUP ── */
+.ig-preview {
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  overflow: hidden;
+  margin: 20px 0;
+  max-width: 400px;
+}
+
+.ig-preview-header {
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.ig-avatar {
+  width: 36px; height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--pink), var(--orange));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.ig-username { font-size: 13px; font-weight: 800; color: var(--white); }
+.ig-handle { font-size: 11px; color: var(--gray); }
+
+.ig-image {
+  background: linear-gradient(135deg, #1a2a00, #2a4a00);
+  height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 48px;
+}
+
+.ig-caption {
+  padding: 14px 16px;
+  font-size: 13px;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+.ig-caption strong { color: var(--white); }
+
+.ig-hashtags {
+  padding: 0 16px 14px;
+  font-size: 12px;
+  color: var(--blue);
+  line-height: 1.7;
+}
+
+.ig-actions {
+  padding: 10px 16px;
+  display: flex;
+  gap: 16px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+  font-size: 18px;
+}
+
+/* ── CALENDAR ── */
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  margin: 20px 0;
+}
+
+.cal-header {
+  font-size: 10px;
+  font-weight: 800;
+  text-align: center;
+  color: var(--gray2);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 8px 4px;
+}
+
+.cal-day {
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: 6px;
+  padding: 10px 6px;
+  text-align: center;
+  min-height: 80px;
+}
+
+.cal-day-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 22px;
+  color: var(--gray2);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.cal-day.active { border-color: var(--limeborder); background: var(--limebg); }
+.cal-day.active .cal-day-num { color: var(--lime); }
+
+.cal-task {
+  font-size: 9px;
+  font-weight: 800;
+  line-height: 1.3;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.cal-day.active .cal-task { color: var(--lime2); }
+
+/* ── PROFILE BUILDER ── */
+.profile-builder {
+  background: var(--bg2);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin: 20px 0;
+}
+
+.profile-builder-top {
+  background: linear-gradient(135deg, #111, #1a2a00);
+  height: 100px;
+  position: relative;
+}
+
+.profile-builder-avatar {
+  width: 72px; height: 72px;
+  border-radius: 50%;
+  border: 3px solid var(--bg2);
+  background: linear-gradient(135deg, var(--lime), var(--lime2));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  position: absolute;
+  bottom: -20px;
+  left: 24px;
+}
+
+.profile-builder-body {
+  padding: 32px 24px 24px;
+}
+
+.profile-field {
+  margin-bottom: 16px;
+}
+
+.profile-field label {
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray2);
+  display: block;
+  margin-bottom: 6px;
+}
+
+.profile-field-value {
+  background: var(--bg3);
+  border: 1px solid rgba(170,255,0,0.1);
+  border-radius: 6px;
+  padding: 12px 16px;
+  font-size: 14px;
+  color: var(--white);
+  line-height: 1.6;
+  font-family: 'Fira Code', monospace;
+}
+
+.profile-field-value .lime { color: var(--lime); }
+.profile-field-value .pink { color: var(--pink); }
+.profile-field-value .blue { color: var(--blue); }
+
+/* ── TIMELINE ── */
+.timeline {
+  position: relative;
+  padding-left: 36px;
+  margin: 20px 0;
+}
+
+.timeline::before {
+  content: '';
+  position: absolute;
+  left: 11px; top: 0; bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--lime), rgba(170,255,0,0.1));
+}
+
+.tl-item {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.tl-item::before {
+  content: '';
+  position: absolute;
+  left: -29px; top: 5px;
+  width: 10px; height: 10px;
+  background: var(--lime);
+  border-radius: 50%;
+  border: 2px solid var(--bg);
+}
+
+.tl-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--lime);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.tl-item h4 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.tl-item p {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ── METRIC CARDS ── */
+.metric-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.metric-card {
+  background: var(--bg3);
+  border: 1px solid rgba(255,255,255,0.05);
+  border-radius: var(--r);
+  padding: 20px;
+  text-align: center;
+}
+
+.metric-num {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: 48px;
+  color: var(--lime);
+  line-height: 1;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.metric-label {
+  font-size: 11px;
+  color: var(--gray);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ── TABLE ── */
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 13px;
+}
+
+.data-table th {
+  background: var(--bg3);
+  color: var(--lime);
+  padding: 10px 16px;
+  text-align: left;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 800;
+  border-bottom: 1px solid rgba(170,255,0,0.2);
+}
+
+.data-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  color: #bbb;
+  vertical-align: top;
+  line-height: 1.6;
+}
+
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: rgba(170,255,0,0.02); }
+
+.badge {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.badge-lime { background: var(--limebg); color: var(--lime); }
+.badge-orange { background: var(--orangebg); color: var(--orange); }
+.badge-pink { background: rgba(255,107,157,0.1); color: var(--pink); }
+
+/* ── CHECKLIST ── */
+.check-list { list-style: none; margin: 16px 0; }
+.check-list li {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: 14px;
+  color: #aaa;
+  align-items: flex-start;
+  line-height: 1.5;
+}
+.check-list li:last-child { border-bottom: none; }
+.check-icon {
+  width: 20px; height: 20px;
+  border-radius: 4px;
+  border: 2px solid var(--limeborder);
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  color: var(--lime);
+}
+
+/* ── SCROLL PROGRESS ── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 260px; right: 0;
+  height: 3px;
+  background: rgba(255,255,255,0.05);
+  z-index: 100;
+}
+
+.progress-fill {
+  height: 100%;
+  background: var(--lime);
+  width: 0%;
+  transition: width 0.1s;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 900px) {
+  .sidebar { display: none; }
+  .main { margin-left: 0; }
+  .progress-bar { left: 0; }
+  .page-section { padding: 48px 24px; }
+  .hero { padding: 60px 24px; }
+  .grid-2, .dodont { grid-template-columns: 1fr; }
+  .grid-3 { grid-template-columns: 1fr; }
+  .calendar { grid-template-columns: repeat(4, 1fr); }
+  .hero::after { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="layout">
+
+<!-- ── SIDEBAR ── -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <span class="ig-icon">📸</span>
+    <h1>LIME × IG</h1>
+    <p>Guía completa para trabajar Instagram desde cero</p>
+  </div>
+
+  <div class="nav-section-label">Inicio</div>
+  <a href="#perfil" class="nav-item"><span class="nav-num">01</span>Perfil Optimizado</a>
+  <a href="#mentalidad" class="nav-item"><span class="nav-num">02</span>Mentalidad IG</a>
+
+  <div class="nav-section-label">Contenido</div>
+  <a href="#tipos" class="nav-item"><span class="nav-num">03</span>Tipos de Contenido</a>
+  <a href="#carrusel" class="nav-item"><span class="nav-num">04</span>Posts Carrusel</a>
+  <a href="#reels" class="nav-item"><span class="nav-num">05</span>Reels</a>
+  <a href="#stories" class="nav-item"><span class="nav-num">06</span>Stories</a>
+  <a href="#captions" class="nav-item"><span class="nav-num">07</span>Captions</a>
+  <a href="#hashtags" class="nav-item"><span class="nav-num">08</span>Hashtags</a>
+
+  <div class="nav-section-label">Captación</div>
+  <a href="#dms" class="nav-item"><span class="nav-num">09</span>DMs Proactivos</a>
+  <a href="#comentarios" class="nav-item"><span class="nav-num">10</span>Comentarios</a>
+  <a href="#cierre" class="nav-item"><span class="nav-num">11</span>Cierre en DM</a>
+
+  <div class="nav-section-label">Sistema</div>
+  <a href="#calendario" class="nav-item"><span class="nav-num">12</span>Calendario 30 días</a>
+  <a href="#metricas" class="nav-item"><span class="nav-num">13</span>Métricas Clave</a>
+  <a href="#errores" class="nav-item"><span class="nav-num">14</span>Errores Comunes</a>
+  <a href="#checklist" class="nav-item"><span class="nav-num">15</span>Checklist Final</a>
+</nav>
+
+<!-- ── MAIN ── -->
+<main class="main">
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-tag">📸 Instagram · Guía Definitiva · Copy-Paste</div>
+  <h1>INSTAGRAM<br><span>LIME</span><br>COMPLETO</h1>
+  <p class="hero-sub">
+    Todo lo que necesitás para atraer, convencer y cerrar clientes en Instagram. 
+    Textos listos para copiar. Estrategias para principiantes. Sin experiencia previa.
+  </p>
+  <div class="hero-stats">
+    <div class="hero-stat"><span class="num">15</span><span class="lbl">Módulos</span></div>
+    <div class="hero-stat"><span class="num">60+</span><span class="lbl">Textos listos</span></div>
+    <div class="hero-stat"><span class="num">30</span><span class="lbl">Días de plan</span></div>
+    <div class="hero-stat"><span class="num">0$</span><span class="lbl">Inversión en ads</span></div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 01 PERFIL -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="perfil">
+  <div class="section-header">
+    <div class="section-num-big">01</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Primero lo primero</span>
+      <div class="section-title">Armá tu perfil de Instagram que vende solo</div>
+      <p class="section-desc">Tu perfil es tu local comercial. Si está mal configurado, perdés clientes antes de hablarles. Seguí este paso a paso exacto.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Foto de perfil — La cara que genera confianza</div>
+        <div class="step-card-sub">Lo primero que ven. Lo que hace que te sigan o no.</div>
+      </div>
+      <span class="step-card-tag tag-lime">Básico</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="info-box info-lime">
+        <span class="info-box-icon">📸</span>
+        <div class="info-box-body">
+          <strong>La regla de oro de la foto</strong>
+          <p>Cara humana + sonrisa natural + fondo limpio = confianza inmediata. 
+          Las personas confían en personas, no en logos ni en animaciones.</p>
+        </div>
+      </div>
+      <ul class="check-list">
+        <li><div class="check-icon">✓</div>Usá una foto donde se vea tu cara completa, mirando a la cámara</li>
+        <li><div class="check-icon">✓</div>Sonreí de forma natural, no forzada</li>
+        <li><div class="check-icon">✓</div>Fondo claro, blanco o al aire libre — sin distracciones</li>
+        <li><div class="check-icon">✓</div>Buena iluminación: luz natural de frente, no de costado ni de atrás</li>
+        <li><div class="check-icon">✓</div>Ropa prolija, no importa si no es formal</li>
+      </ul>
+      <div class="info-box info-red">
+        <span class="info-box-icon">🚫</span>
+        <div class="info-box-body">
+          <strong>Evitá esto</strong>
+          <p>Logos de LIME, fotos con mucha gente, fotos de espaldas, imágenes de autos o lujos, emojis de dinero como foto. Todo eso activa el modo "esto es spam".</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">2</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Nombre de usuario — Fácil de encontrar y recordar</div>
+        <div class="step-card-sub">El @handle que usarás en todo tu contenido.</div>
+      </div>
+      <span class="step-card-tag tag-lime">Básico</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <p style="color:#aaa; margin:16px 0;">Ejemplos de nombres que funcionan bien. Copiá el formato y adaptalo con tu nombre real:</p>
+      <div class="grid-3">
+        <div class="mini-card">
+          <span class="mini-card-icon">🟢</span>
+          <h4>@TuNombre.Crypto</h4>
+          <p>Simple, identifica tu nicho, fácil de recordar</p>
+        </div>
+        <div class="mini-card">
+          <span class="mini-card-icon">🟢</span>
+          <h4>@TuNombre.Libre</h4>
+          <p>Evoca libertad financiera sin sonar a venta</p>
+        </div>
+        <div class="mini-card">
+          <span class="mini-card-icon">🟢</span>
+          <h4>@TuNombre.Digital</h4>
+          <p>Moderno, amplio, no limita a un solo negocio</p>
+        </div>
+      </div>
+      <div class="info-box info-orange">
+        <span class="info-box-icon">⚠️</span>
+        <div class="info-box-body">
+          <strong>No uses LIME en tu @</strong>
+          <p>Si ponés "@TuNombre.LIME" parecés vendedor antes de que abran tu perfil. 
+          Mejor algo amplio que despierte curiosidad.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">3</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Bio — Las 150 letras más importantes de tu negocio</div>
+        <div class="step-card-sub">Copiá y personalizá una de estas opciones listas.</div>
+      </div>
+      <span class="step-card-tag tag-lime">Copiar</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+
+      <p style="color:#aaa; margin:16px 0 20px;">La bio tiene que responder 3 preguntas en segundos: ¿Qué hacés? ¿Para quién? ¿Qué hacer ahora? Elegí una de estas opciones y remplazá [TuNombre] con el tuyo:</p>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📋 BIO OPCIÓN 1 — Enfoque Libertad</span>
+          <button class="copy-btn" onclick="copyText(this, 'bio1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="bio1">🟢 Construyo ingresos digitales con crypto
+📲 Sistema de economía colaborativa desde el celular
+Sin jefe · Sin horario · Sin experiencia previa
+👇 Empezá con ~15 USDT</div>
+        <div class="copy-box-note">⟶ Remplazá la última línea con tu link de Linktree o tu número de WhatsApp</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📋 BIO OPCIÓN 2 — Enfoque Resultados</span>
+          <button class="copy-btn" onclick="copyText(this, 'bio2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="bio2">💰 Retiros reales en USDT desde el celular
+🌍 Red activa en toda Latinoamérica
+📈 Empecé sin saber nada de crypto
+👇 Te cuento cómo [link]</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📋 BIO OPCIÓN 3 — Enfoque Comunidad</span>
+          <button class="copy-btn" onclick="copyText(this, 'bio3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="bio3">🤝 Ayudo a personas a generar su primer ingreso en crypto
+🔗 Red en blockchain · Pagos automáticos
+📲 Solo necesitás tu celular y 10 minutos
+👇 Escribime o mirá el link 👇</div>
+      </div>
+
+      <div class="profile-builder">
+        <div class="profile-builder-top">
+          <div class="profile-builder-avatar">🙋</div>
+        </div>
+        <div class="profile-builder-body">
+          <div class="profile-field">
+            <label>Nombre Visible</label>
+            <div class="profile-field-value"><span class="lime">Tu Nombre</span> | Crypto & Libertad</div>
+          </div>
+          <div class="profile-field">
+            <label>Bio (así se ve en el perfil)</label>
+            <div class="profile-field-value">🟢 Construyo ingresos digitales con crypto<br>📲 Sistema de economía colaborativa desde el celular<br>Sin jefe · Sin horario · Sin experiencia<br><span class="blue">👇 Empezá con ~15 USDT</span></div>
+          </div>
+          <div class="profile-field">
+            <label>Link en Bio (usar Linktree)</label>
+            <div class="profile-field-value"><span class="lime">linktr.ee/tunombre</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">4</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Link en Bio con Linktree — El hub que dirige a todo</div>
+        <div class="step-card-sub">Cómo configurar tus 3 links esenciales gratis.</div>
+      </div>
+      <span class="step-card-tag tag-lime">Setup</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-label">Paso 1</div>
+          <h4>Entrá a linktr.ee y creá tu cuenta gratis</h4>
+          <p>Usá tu nombre o el mismo @ de Instagram. Plan gratuito es suficiente para empezar.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Paso 2</div>
+          <h4>Agregá estos 3 botones en orden</h4>
+          <p>
+            🔴 Botón 1: "🚀 Quiero empezar en LIME" → tu link de referido<br>
+            🟡 Botón 2: "📖 ¿Cómo crear mi wallet?" → link al tutorial PDF<br>
+            🟢 Botón 3: "💬 Hablar por WhatsApp" → wa.me/tuNumero
+          </p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Paso 3</div>
+          <h4>Copiá el link de Linktree en el campo "Sitio web" de IG</h4>
+          <p>Queda así: linktr.ee/tunombre — Limpio y profesional.</p>
+        </div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📋 TEXTO BOTÓN 1 — LINKTREE</span>
+          <button class="copy-btn" onclick="copyText(this, 'linktree1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="linktree1">🚀 Quiero empezar en LIME → Hacé clic aquí</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">5</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Historias Destacadas — Las 4 que necesitás sí o sí</div>
+        <div class="step-card-sub">Lo primero que ven cuando entran a tu perfil después de la bio.</div>
+      </div>
+      <span class="step-card-tag tag-lime">Perfil</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="grid-2">
+        <div class="mini-card">
+          <span class="mini-card-icon">❓</span>
+          <h4>Destacada 1: "¿Qué es?"</h4>
+          <p>Stories explicando qué es LIME en palabras simples. 3-5 stories con texto grande. Portada: fondo verde con "¿QUÉ ES?"</p>
+        </div>
+        <div class="mini-card">
+          <span class="mini-card-icon">💸</span>
+          <h4>Destacada 2: "Retiros"</h4>
+          <p>Screenshots de tus retiros y los de tu equipo. Con permiso de cada persona. Portada: fondo verde con "RETIROS 💰"</p>
+        </div>
+        <div class="mini-card">
+          <span class="mini-card-icon">🚀</span>
+          <h4>Destacada 3: "Cómo empezar"</h4>
+          <p>Tutorial en 3 stories: crear wallet → enviar USDT → activar posición. Portada: "EMPEZÁ AQUÍ 👇"</p>
+        </div>
+        <div class="mini-card">
+          <span class="mini-card-icon">🙋</span>
+          <h4>Destacada 4: "Sobre mí"</h4>
+          <p>Quién sos, de dónde venís, por qué empezaste en LIME. Hace conexión personal con el visitante. Portada: tu foto</p>
+        </div>
+      </div>
+      <div class="info-box info-lime">
+        <span class="info-box-icon">💡</span>
+        <div class="info-box-body">
+          <strong>Cómo crear las portadas de destacadas</strong>
+          <p>Usá Canva (gratis). Buscá "Instagram Story" como tamaño. 
+          Fondo verde lima (#AAFF00), texto negro en Bebas Neue o cualquier fuente bold. 
+          Descargá como PNG y usala como portada de la destacada.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 02 MENTALIDAD -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="mentalidad">
+  <div class="section-header">
+    <div class="section-num-big">02</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Antes de publicar nada</span>
+      <div class="section-title">La mentalidad correcta para Instagram</div>
+      <p class="section-desc">Instagram no es una vidriera para poner precios. Es un lugar para construir confianza. Quien entiende esto, cierra. Quien no, persigue y asusta.</p>
+    </div>
+  </div>
+
+  <div class="dodont">
+    <div class="do-col">
+      <h4>✅ La mentalidad que funciona</h4>
+      <ul>
+        <li>✓ Publicás para educar, entretener o inspirar</li>
+        <li>✓ Mostrás tu proceso real, incluyendo las dudas</li>
+        <li>✓ Sos honesto sobre cuánto ganás y cuándo</li>
+        <li>✓ Respondés preguntas sin pedir nada a cambio</li>
+        <li>✓ Tratás cada seguidor como una persona, no un número</li>
+        <li>✓ Celebrás los logros de otros en tu red</li>
+        <li>✓ Construís relación antes de vender</li>
+      </ul>
+    </div>
+    <div class="dont-col">
+      <h4>❌ La mentalidad que espanta</h4>
+      <ul>
+        <li>✗ Publicar solo "entren a mi negocio"</li>
+        <li>✗ Exagerar ganancias para impresionar</li>
+        <li>✗ Publicar fotos de lujos que no tenés</li>
+        <li>✗ Hablar de libertad financiera sin probarla vos</li>
+        <li>✗ Mandar el mismo DM a 100 personas por día</li>
+        <li>✗ Presionar a alguien que dijo "no me interesa"</li>
+        <li>✗ Borrar comentarios críticos o negativos</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box info-blue">
+    <span class="info-box-icon">🧠</span>
+    <div class="info-box-body">
+      <strong>La regla 80/20 del contenido</strong>
+      <p>80% de tu contenido tiene que ser educativo, entretenido o personal (sin pedir nada). 
+      Solo el 20% puede ser orientado a venta o invitación directa. 
+      Si invertís esa proporción, la gente deja de seguirte.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 03 TIPOS DE CONTENIDO -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="tipos">
+  <div class="section-header">
+    <div class="section-num-big">03</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Los formatos que funcionan</span>
+      <div class="section-title">Los 4 tipos de contenido y cuándo usar cada uno</div>
+      <p class="section-desc">No es lo mismo un carrusel que un reel que una story. Cada formato tiene un objetivo diferente. Acá te explicamos cuál sirve para qué.</p>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Formato</th>
+        <th>Para qué sirve</th>
+        <th>Frecuencia</th>
+        <th>Dificultad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong style="color:var(--white)">📑 Carrusel</strong></td>
+        <td>Educar · Explicar el sistema · Guías paso a paso</td>
+        <td><span class="badge badge-lime">2×semana</span></td>
+        <td style="color:var(--lime)">Fácil</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--white)">🎬 Reel</strong></td>
+        <td>Mostrar prueba · Captar nuevos · Viralidad</td>
+        <td><span class="badge badge-orange">3×semana</span></td>
+        <td style="color:var(--orange)">Medio</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--white)">🔴 Story</strong></td>
+        <td>Cercanía diaria · Encuestas · Seguimiento</td>
+        <td><span class="badge badge-pink">Diario</span></td>
+        <td style="color:var(--lime)">Muy fácil</td>
+      </tr>
+      <tr>
+        <td><strong style="color:var(--white)">📸 Post imagen</strong></td>
+        <td>Frases · Testimonios · Celebraciones</td>
+        <td><span class="badge badge-lime">1×semana</span></td>
+        <td style="color:var(--lime)">Fácil</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 04 CARRUSELES -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="carrusel">
+  <div class="section-header">
+    <div class="section-num-big">04</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Formato #1 para educar</span>
+      <div class="section-title">Posts Carrusel — Textos completos para copiar</div>
+      <p class="section-desc">Un carrusel son entre 5 y 10 slides. Cada slide tiene poco texto, letra grande, y lleva a la siguiente. Copiá estos textos y armálos en Canva.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-pink"></div>
+      <div class="step-card-num">C1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Carrusel: "¿Qué es USDT y por qué cada vez más gente lo usa?"</div>
+        <div class="step-card-sub">Educativo · No menciona LIME · Genera curiosidad</div>
+      </div>
+      <span class="step-card-tag tag-pink">Semana 1</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 1 — Portada (texto grande, impactante)</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s1">¿Qué es el USDT y por qué
+millones de personas ya
+lo tienen en su celular?
+
+→ Deslizá para entender</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 2</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s2">USDT es un dólar digital.
+
+Vale exactamente 1 dólar
+en todo el mundo, siempre.
+
+No sube ni baja como el Bitcoin.
+Es estable. Por eso lo usa tanta gente.</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 3</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s3">¿Cómo se usa?
+
+Lo guardás en una app llamada
+"wallet" (billetera digital).
+
+Lo enviás a cualquier persona
+en cualquier país en segundos.
+
+Sin banco. Sin formularios. Sin espera.</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 4</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s4')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s4">¿Por qué cada vez más gente lo usa?
+
+✅ Se envía en segundos
+✅ Sin comisiones bancarias altas
+✅ No lo puede congelar ningún banco
+✅ Lo recibe cualquiera en cualquier país
+✅ 1 USDT = 1 dólar siempre</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 5</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s5')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s5">¿Y yo puedo tener USDT?
+
+Sí. Cualquier persona
+con un celular puede tenerlo.
+
+No necesitás saber de tecnología.
+No necesitás mucho dinero.
+No necesitás permiso de nadie.</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 6 — CTA (llamado a acción)</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1s6')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1s6">¿Querés saber cómo crear tu
+primera wallet en 10 minutos?
+
+👇 Escribime "WALLET" en comentarios
+y te mando el tutorial gratis.</div>
+        <div class="copy-box-note">⟶ Este último slide genera comentarios que luego usás para contactar por DM a cada persona que responde</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📝 CAPTION (texto del post) — copiar completo</span>
+          <button class="copy-btn" onclick="copyText(this, 'c1cap')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c1cap">Hace 6 meses no sabía nada de USDT. Hoy lo uso todos los días para recibir y enviar plata sin pasar por ningún banco.
+
+Y lo mejor es que cualquiera puede aprender a usarlo en menos de una hora.
+
+En este carrusel te explico qué es, cómo funciona y por qué tanta gente ya lo tiene en su celular.
+
+👇 Deslizá y si querés el tutorial para crear tu primera wallet, escribí WALLET en los comentarios. Te lo mando gratis.
+
+¿Ya sabías lo que era el USDT? Contame en los comentarios 👇</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-pink"></div>
+      <div class="step-card-num">C2</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Carrusel: "5 razones por las que la gente fracasa intentando ganar dinero online"</div>
+        <div class="step-card-sub">Emocional · Genera identificación · Indirecto sobre LIME</div>
+      </div>
+      <span class="step-card-tag tag-pink">Semana 2</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDE 1 — Portada</span>
+          <button class="copy-btn" onclick="copyText(this, 'c2s1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c2s1">5 razones por las que
+la gente fracasa intentando
+ganar dinero online
+
+(y cómo evitarlas)</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 SLIDES 2-6</span>
+          <button class="copy-btn" onclick="copyText(this, 'c2s2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c2s2">SLIDE 2:
+Razón #1: Buscan el dinero fácil
+Quieren ganar sin trabajar nada.
+Los negocios reales requieren
+esfuerzo al principio. Sin excepción.
+
+SLIDE 3:
+Razón #2: No entienden lo que hacen
+Meten plata en algo que no entienden.
+Antes de invertir un peso, entendé
+el mecanismo completo.
+
+SLIDE 4:
+Razón #3: Se rinden en la semana 2
+El primer mes siempre es el más difícil.
+Quien sobrevive ese mes,
+generalmente construye algo real.
+
+SLIDE 5:
+Razón #4: No tienen sistema, improvisan
+Sin un proceso claro y repetible,
+cada semana empezás de cero.
+El sistema es lo que te libera.
+
+SLIDE 6:
+Razón #5: Trabajan solos
+Los negocios crecen con red.
+Tener personas que te apoyan
+y te enseñan acorta años de errores.
+
+SLIDE 7 (CTA):
+¿Querés evitar estos errores?
+Escribime "SISTEMA" en comentarios
+y te cuento cómo trabajo yo.</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📝 CAPTION COMPLETO</span>
+          <button class="copy-btn" onclick="copyText(this, 'c2cap')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c2cap">Cometí todos estos errores. Uno por uno.
+
+Busqué el dinero rápido, no entendí lo que hacía, me rendí demasiado pronto y trabajé completamente solo.
+
+Resultado: nada.
+
+Lo que cambió todo fue tener un sistema claro, con personas que ya habían caminado ese camino.
+
+Hoy funciona diferente. Sin magia. Con proceso.
+
+Deslizá y si te identificás con alguna de estas razones, escribí SISTEMA en los comentarios. Te cuento lo que a mí me funcionó 👇</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-pink"></div>
+      <div class="step-card-num">C3</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Carrusel: "Cómo funciona LIME en 5 pasos simples"</div>
+        <div class="step-card-sub">Explicativo directo · Para personas que ya mostraron interés</div>
+      </div>
+      <span class="step-card-tag tag-pink">Semana 3</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 TODOS LOS SLIDES</span>
+          <button class="copy-btn" onclick="copyText(this, 'c3all')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c3all">SLIDE 1 (portada):
+Cómo funciona LIME
+en 5 pasos simples
+(para personas sin experiencia en crypto)
+
+SLIDE 2 — Paso 1:
+Creás tu wallet de USDT
+Una app gratuita en tu celular
+donde guardás tus dólares digitales.
+10 minutos de configuración.
+
+SLIDE 3 — Paso 2:
+Enviás ~15 USDT a tu posición
+Con eso activás tu lugar en la red.
+(Incluye las fees de la red TRC-20)
+
+SLIDE 4 — Paso 3:
+Ayudás a 2 personas a entrar
+Cada una hace lo mismo que vos.
+Es una matriz de cooperación 2×2.
+Cuando se completa, recibís en tu wallet.
+
+SLIDE 5 — Paso 4:
+Los pagos van directo a tu wallet
+Por la red blockchain TRC-20.
+De wallet a wallet, sin intermediarios.
+Verificable en Tronscan por cualquiera.
+
+SLIDE 6 — Paso 5:
+El sistema avanza solo
+Con las ganancias de cada nivel,
+el sistema te compra el siguiente.
+Vos solo trabajás en traer personas.
+
+SLIDE 7 (CTA):
+¿Querés empezar?
+Escribí EMPEZAR en los comentarios
+o hacé clic en el link de mi bio 👇</div>
+      </div>
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📝 CAPTION</span>
+          <button class="copy-btn" onclick="copyText(this, 'c3cap')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c3cap">Cuando me lo explicaron a mí la primera vez no lo entendí. Era demasiado técnico.
+
+Acá lo puse en palabras simples, como a mí me hubiera gustado que me lo explicaran.
+
+5 pasos. Sin tecnicismos. Sin mentiras.
+
+Deslizá y si tenés alguna pregunta, escribila en los comentarios. Respondo todo 👇</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-pink"></div>
+      <div class="step-card-num">C4</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Carrusel: "Respondiendo las dudas más comunes sobre LIME"</div>
+        <div class="step-card-sub">Maneja objeciones · Para semanas 3-4</div>
+      </div>
+      <span class="step-card-tag tag-pink">Semana 4</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📑 TODOS LOS SLIDES</span>
+          <button class="copy-btn" onclick="copyText(this, 'c4all')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="c4all">SLIDE 1:
+Respondiendo las preguntas
+que más me hacen sobre LIME
+(Las dudas que yo también tuve)
+
+SLIDE 2:
+❓ "¿Es una pirámide?"
+No. Una pirámide necesita
+siempre nuevos para pagar a los viejos.
+Acá los pagos van de wallet a wallet
+por la red TRC-20, sin nadie que los controle.
+Verificables en Tronscan ahora mismo.
+
+SLIDE 3:
+❓ "¿Y si no consigo gente?"
+Los clones de niveles superiores
+llenan posiciones de tu red
+aunque vos no hagas nada.
+Igual, los primeros 30 días
+sí requieren trabajo activo.
+
+SLIDE 4:
+❓ "¿Cuánto se puede ganar?"
+Depende de vos y tu red.
+Nivel 1: 9 USDT de retiro.
+Nivel 7: 3.000 USDT de retiro.
+Sin exageraciones. Son los números reales.
+
+SLIDE 5:
+❓ "¿Necesito saber de crypto?"
+No. Solo necesitás
+saber usar una app de wallet,
+que es tan fácil como el home banking.
+
+SLIDE 6:
+❓ "¿Es seguro?"
+Los fondos no los maneja nadie.
+Van directo por la red blockchain Tron
+de wallet a wallet. Transparente
+y verificable por cualquiera en Tronscan.
+
+SLIDE 7 (CTA):
+¿Tenés más preguntas?
+Escribilas en los comentarios.
+Respondo con gusto 👇</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 05 REELS -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="reels">
+  <div class="section-header">
+    <div class="section-num-big">05</div>
+    <div class="section-title-block">
+      <span class="section-kicker">El formato que da alcance</span>
+      <div class="section-title">Reels — Scripts de voz y estructura exacta</div>
+      <p class="section-desc">Los reels te llevan a personas que no te siguen todavía. Son la herramienta de captación más potente en Instagram hoy.</p>
+    </div>
+  </div>
+
+  <div class="info-box info-lime">
+    <span class="info-box-icon">🎬</span>
+    <div class="info-box-body">
+      <strong>Antes de grabar — lo mínimo necesario</strong>
+      <p>Celular con buena cámara (el tuyo está bien). 
+      Lugar con buena luz natural (cerca de una ventana). 
+      CapCut para editar (gratis). 
+      Duración ideal: 15 a 45 segundos. 
+      Los primeros 3 segundos son los más importantes: tienen que enganchar o la gente pasa.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-orange"></div>
+      <div class="step-card-num">R1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Reel: Mostrar tu retiro en wallet</div>
+        <div class="step-card-sub">Prueba social · El más poderoso para generar consultas</div>
+      </div>
+      <span class="step-card-tag tag-orange">Alta conversión</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">🎙️ SCRIPT DE VOZ — REEL DE RETIRO (30 seg)</span>
+          <button class="copy-btn" onclick="copyText(this, 'r1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="r1">SEGUNDOS 0-3 (GANCHO — texto en pantalla):
+"Esto llegó mientras hacía otra cosa 👀"
+
+SEGUNDOS 3-10:
+"Miren esto. Acabo de recibir [monto] USDT en mi wallet.
+Sin hacer nada en ese momento.
+El sistema corrió solo."
+
+SEGUNDOS 10-20:
+"Llevo [tiempo] en esto.
+Empecé sin saber nada de crypto.
+Con ~15 dólares digitales.
+Hoy recibo pagos directos a mi wallet."
+
+SEGUNDOS 20-30:
+"Si quieren saber cómo funciona,
+comenten INFO abajo
+o vayan al link de mi bio. 🟢"</div>
+        <div class="copy-box-note">⟶ Mientras hablás, grabás la pantalla de tu wallet con la transacción. Podés tapar el monto si querés privacidad, pero mostrá que hay movimiento real.</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📝 CAPTION PARA EL REEL</span>
+          <button class="copy-btn" onclick="copyText(this, 'r1cap')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="r1cap">Esto es lo que pasa cuando el sistema trabaja mientras vos hacés tu vida normal.
+
+No fue suerte. Fue entender cómo funciona y traer a las personas correctas.
+
+¿Querés que te explique? Comentá INFO y te cuento todo sin compromiso 👇
+
+#crypto #usdt #ingresosPasivos #libertadfinanciera #emprendimiento #dinerodigital #trabajodesdecasa #redblockchain</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-orange"></div>
+      <div class="step-card-num">R2</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Reel: Tu historia personal en 30 segundos</div>
+        <div class="step-card-sub">Conexión emocional · Genera confianza</div>
+      </div>
+      <span class="step-card-tag tag-orange">Confianza</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">🎙️ SCRIPT — HISTORIA PERSONAL (adaptalo a tu caso real)</span>
+          <button class="copy-btn" onclick="copyText(this, 'r2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="r2">GANCHO (0-3 seg):
+"Lo que nadie me dijo cuando empecé en crypto 👇"
+
+HISTORIA (3-20 seg):
+"Hace [tiempo] yo [situación tuya real:
+buscaba ingreso extra / estaba cansado del trabajo / etc].
+
+Me llegó esto de LIME.
+No entendía nada.
+No confiaba en nada.
+
+Pero decidí probar con ~15 dólares digitales
+porque el riesgo era mínimo."
+
+RESULTADO (20-27 seg):
+"[Tiempo] después,
+[resultado honesto y real tuyo]."
+
+CTA (27-30 seg):
+"Comenten EMPEZAR si quieren saber más 🟢"</div>
+        <div class="copy-box-note">⟶ Grabate de frente, hablando directamente a cámara. Sé 100% honesto. La autenticidad convierte más que la perfección.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-orange"></div>
+      <div class="step-card-num">R3</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Reel: Comparativa "Antes y después"</div>
+        <div class="step-card-sub">Motivacional · Alta tasa de shares</div>
+      </div>
+      <span class="step-card-tag tag-orange">Viral</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">🎙️ SCRIPT — ANTES Y DESPUÉS</span>
+          <button class="copy-btn" onclick="copyText(this, 'r3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="r3">TEXTO EN PANTALLA + VOZ:
+
+"ANTES de entrar a LIME:"
+- No sabía qué era una wallet
+- Nunca había tenido USDT
+- Desconfiaba de todo lo de internet
+- Pensaba que esto era para técnicos
+
+"DESPUÉS de [tiempo en LIME]:"
+- Tengo mi wallet activa y funcionando
+- Recibo pagos en USDT automáticamente  
+- Tengo una red de [N] personas creciendo
+- Aprendí más de finanzas en [tiempo] 
+  que en todos mis años anteriores
+
+"¿La diferencia?"
+Un video de 3 minutos y ~15 dólares.
+
+"¿Querés dar ese primer paso?"
+Comenten QUIERO y te mando la info 🟢</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-orange"></div>
+      <div class="step-card-num">R4</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Reel: "Esto NO es una pirámide — acá la diferencia"</div>
+        <div class="step-card-sub">Maneja la objeción más común de forma proactiva</div>
+      </div>
+      <span class="step-card-tag tag-orange">Objeciones</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">🎙️ SCRIPT — NO ES PIRÁMIDE</span>
+          <button class="copy-btn" onclick="copyText(this, 'r4')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="r4">GANCHO:
+"Me preguntan seguido si LIME es una pirámide.
+Voy a ser honesto: entiendo por qué lo preguntan."
+
+CUERPO:
+"Una pirámide funciona así:
+los de arriba cobran de los nuevos de abajo.
+Cuando se frena la entrada de nuevos,
+se cae todo. Es matemáticamente insostenible.
+
+LIME funciona diferente:
+Los pagos van directo por la red TRC-20,
+de wallet a wallet.
+No hay persona que los controle.
+No hay empresa que pueda desaparecer con tu plata.
+Podés verificar cada transacción en Tronscan ahora mismo."
+
+CIERRE:
+"No te pido que me creas.
+Te pido que lo verifiques vos mismo.
+El link para ver las transacciones
+está en el primer comentario."
+
+CTA:
+"¿Tenés más preguntas? Las respondo todas 👇"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 06 STORIES -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="stories">
+  <div class="section-header">
+    <div class="section-num-big">06</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Contacto diario con tu audiencia</span>
+      <div class="section-title">Stories — Plan de 7 días listo para publicar</div>
+      <p class="section-desc">Las stories crean la relación cotidiana. Son fáciles de hacer y las más efectivas para mantener interés y generar conversaciones.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-blue"></div>
+      <div class="step-card-num">S1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">7 stories para publicar esta semana — Completas</div>
+        <div class="step-card-sub">Una por día. Textos listos para copiar y pegar en Canva.</div>
+      </div>
+      <span class="step-card-tag tag-blue">7 días</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY LUNES — Encuesta de arranque</span>
+          <button class="copy-btn" onclick="copyText(this, 'st1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st1">FONDO: verde lima o negro
+
+TEXTO GRANDE:
+"¿Sabés qué es el USDT?"
+
+ENCUESTA DE IG (2 opciones):
+✅ "Sí, lo uso"
+❓ "No sé qué es"
+
+TEXTO PEQUEÑO ABAJO:
+"Deslizá y votá 👆 Mañana te cuento algo interesante."</div>
+        <div class="copy-box-note">⟶ Todos los que voten "No sé qué es" → les mandás un DM al día siguiente con el video educativo de USDT</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY MARTES — Educación 1 slide</span>
+          <button class="copy-btn" onclick="copyText(this, 'st2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st2">FONDO: oscuro con texto blanco
+
+"DATO DE HOY 💡
+
+El USDT es un dólar digital
+que no necesita banco para moverse.
+
+Se envía en segundos
+a cualquier parte del mundo.
+
+Y más de 50 millones de personas
+ya lo usan a diario.
+
+¿Sabías esto? 🤔
+[sticker de pregunta]"</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY MIÉRCOLES — Prueba social</span>
+          <button class="copy-btn" onclick="copyText(this, 'st3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st3">IMAGEN: Screenshot de transacción en wallet
+(podés tapar el monto si querés)
+
+TEXTO ENCIMA:
+"Justo ahora 🔔
+El sistema hizo esto solo.
+Sin que yo tocara nada.
+
+¿Querés entender cómo?
+Escribime 👇"
+
+[sticker de DM o link a WhatsApp]</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY JUEVES — Pregunta que genera DMs</span>
+          <button class="copy-btn" onclick="copyText(this, 'st4')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st4">FONDO: oscuro, texto blanco grande
+
+"Si pudieras generar 
+un ingreso extra desde el celular
+sin dejar lo que hacés ahora...
+
+¿Lo harías?
+
+[STICKER DE ENCUESTA]
+👍 Sí, claro
+🤷 Depende de qué"
+
+TEXTO PEQUEÑO ABAJO:
+"Los que voten Sí: les cuento lo que yo hago 👇"</div>
+        <div class="copy-box-note">⟶ A todos los que voten "Sí" → enviá un DM con el gancho de presentación</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY VIERNES — Celebración de equipo</span>
+          <button class="copy-btn" onclick="copyText(this, 'st5')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st5">FONDO: festivo, verde o dorado
+
+"🎉 [Nombre de alguien de tu equipo]
+acaba de hacer su primer retiro!
+
+[Monto] USDT en su wallet.
+Y lleva solo [tiempo] en esto.
+
+Eso es lo que pasa cuando
+el sistema funciona bien 🟢
+
+¿Querés ser el próximo?
+Link en mi bio 👆"</div>
+        <div class="copy-box-note">⟶ Pedí permiso a la persona antes de publicar su nombre y monto. Si no quiere que se muestre el monto, ponés "su primer retiro real" sin el número.</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY SÁBADO — Personal y cercana</span>
+          <button class="copy-btn" onclick="copyText(this, 'st6')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st6">FOTO TUYA (casual, haciendo algo de tu vida)
+
+TEXTO:
+"Sábado trabajando desde casa 🏠
+(o desde donde quiero)
+
+Hace [tiempo] esto no era posible.
+Hoy sí.
+
+No porque sea especial.
+Sino porque encontré el sistema correcto.
+
+¿Querés que te cuente?
+Respondé esta story 👆"</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">📲 STORY DOMINGO — Motivación + CTA suave</span>
+          <button class="copy-btn" onclick="copyText(this, 'st7')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="st7">FONDO: minimalista, texto grande
+
+"Cada semana que no empezás
+es una semana que el sistema
+no trabaja para vos.
+
+No lo digo para presionar.
+Lo digo porque yo esperé mucho
+y ojalá alguien me lo hubiera dicho antes.
+
+Esta semana que empieza:
+¿le das una chance? 🟢
+
+[Link o sticker de DM]"</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 07 CAPTIONS -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="captions">
+  <div class="section-header">
+    <div class="section-num-big">07</div>
+    <div class="section-title-block">
+      <span class="section-kicker">El texto que convierte</span>
+      <div class="section-title">Captions extra — Para cualquier tipo de post</div>
+      <p class="section-desc">Textos sueltos listos para usar con fotos personales, screenshots de retiros, o posts motivacionales.</p>
+    </div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">📝 CAPTION — Post foto personal trabajando desde casa</span>
+      <button class="copy-btn" onclick="copyText(this, 'cap1')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="cap1">Office de hoy 🏠
+
+No es un lujo. Es una elección.
+
+Hace un tiempo creía que para ganar dinero
+necesitaba un jefe, un horario y una oficina.
+
+Hoy sé que eso es una opción, no una obligación.
+
+Trabajo distinto. Gano distinto. Pienso distinto.
+
+Si querés saber qué cambió, escribime 
+o mirá el link en mi bio 👇
+
+#trabajodesdecasa #libertadfinanciera #emprendimiento #crypto #ingresodigital</div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">📝 CAPTION — Post con screenshot de retiro</span>
+      <button class="copy-btn" onclick="copyText(this, 'cap2')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="cap2">Este es un retiro real.
+En USDT. En mi wallet.
+Generado por el sistema automáticamente.
+
+No lo exagero. No lo inventé.
+Podés verificarlo en blockchain si querés.
+
+Cuando arranqué no sabía nada de crypto.
+La primera semana no entendía nada.
+
+Hoy entiendo el sistema,
+lo explico y ayudo a otros a empezar.
+
+¿Querés ser uno de ellos?
+Comentá RETIRO y te cuento todo 👇
+
+(Los resultados dependen del trabajo y la red de cada persona)</div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">📝 CAPTION — Post motivacional sin mencionar LIME</span>
+      <button class="copy-btn" onclick="copyText(this, 'cap3')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="cap3">La mayoría espera el momento perfecto.
+
+El momento perfecto no existe.
+Existe el momento en que decidís empezar con lo que tenés.
+
+Yo empecé con dudas, sin experiencia y con poco.
+Y esas tres cosas siguen siendo válidas para empezar.
+
+Lo único que no podés recuperar es el tiempo que pasó sin hacer nada.
+
+¿Cuándo es tu momento? 🟢</div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">📝 CAPTION — Post celebrando a alguien de tu equipo</span>
+      <button class="copy-btn" onclick="copyText(this, 'cap4')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="cap4">Esto me pone muy bien 🎉
+
+[Nombre] acaba de hacer su primer retiro en USDT.
+
+Lleva [tiempo] en el sistema.
+Empezó sin saber nada de crypto.
+Y hoy tiene su primera ganancia real en su wallet.
+
+¿Lo más importante? No paró. Siguió aunque al principio no entendía todo.
+
+Ese es el secreto: no necesitás entenderlo todo para empezar.
+Necesitás empezar para entenderlo todo.
+
+¿Querés ser el próximo? Escribime 👇
+
+#casodeexito #LIME #crypto #ingresodigital #equipoLIME</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 08 HASHTAGS -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="hashtags">
+  <div class="section-header">
+    <div class="section-num-big">08</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Ser encontrado sin pagar</span>
+      <div class="section-title">Hashtags — Los que realmente funcionan</div>
+    </div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">🏷️ SET COMPLETO — Posts educativos crypto (copiar y pegar)</span>
+      <button class="copy-btn" onclick="copyText(this, 'hash1')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="hash1">#crypto #USDT #criptomonedas #blockchain #dinerodigital #criptoinversión #criptoeducacion #cryptolatam #cryptoespañol #ingresodigital #libertadfinanciera #ingresosPasivos #emprendimiento #negociodigital #trabajodesdecasa #emprendedordigital #finanzaspersonales #educacionfinanciera #independenciafinanciera #networkmarketing</div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">🏷️ SET — Reels de motivación / historia personal</span>
+      <button class="copy-btn" onclick="copyText(this, 'hash2')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="hash2">#motivacion #emprendedor #mentalidadganadora #libertad #exitodigital #vida #cambiodementalidad #creceronline #ingresoextra #hagotodo #trabajodesdecelular #criptored #reddigital #economiacolaborativa #LIME #ULIME #equipoLIME #criptonegocios #negocioenlared</div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">🏷️ SET — Posts de retiros y prueba social</span>
+      <button class="copy-btn" onclick="copyText(this, 'hash3')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="hash3">#retiroUSdt #walletcrypto #ingresoreal #gananciadigital #pruebasocial #sistemaautomatico #blockchainpagos #smartcontract #criptoganancias #retirodigital #resultadosreales #emprendimientolatino #cryptoargentina #cryptocolombia #cryptomexico #cryptochile #redcrypto</div>
+  </div>
+
+  <div class="info-box info-orange">
+    <span class="info-box-icon">⚠️</span>
+    <div class="info-box-body">
+      <strong>Cómo usar los hashtags</strong>
+      <p>Usá entre 10 y 20 por post. No copies siempre los mismos: rotá entre los 3 sets. 
+      Ponelos al final del caption o en el primer comentario (ambas formas funcionan). 
+      Evitá hashtags con más de 10 millones de posts: tu contenido se pierde en segundos.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 09 DMs -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="dms">
+  <div class="section-header">
+    <div class="section-num-big">09</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Captación activa</span>
+      <div class="section-title">DMs Proactivos — Cómo contactar sin sonar a spam</div>
+      <p class="section-desc">Además del contenido orgánico, contactás activamente a personas que ya mostraron interés en temas relacionados. Acá el método exacto.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">D1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Cómo encontrar a quién contactar (sin comprar bases de datos)</div>
+        <div class="step-card-sub">El método de los hashtags + interacción previa</div>
+      </div>
+      <span class="step-card-tag tag-lime">Método</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-label">Paso 1 — Buscar</div>
+          <h4>Buscá estos hashtags en IG y filtrá por "Recientes"</h4>
+          <p>#ingresoextra · #trabajodesdecasa · #emprendimientolatino · #cryptolatam · #libertadfinanciera · #negociodigital</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Paso 2 — Calificar</div>
+          <h4>Abrí los perfiles de personas que publicaron recientemente</h4>
+          <p>Buscás: perfil real (foto de cara), al menos 5 posts, bio que muestre interés en dinero/emprendimiento/crypto, que tenga actividad reciente.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Paso 3 — Interactuar primero</div>
+          <h4>Dale like a 2-3 posts suyos y dejá un comentario GENUINO</h4>
+          <p>Ejemplo: "Muy buen punto el que hacés acá sobre [tema de su post]" — NO comentés emojis sueltos o cosas genéricas. Tiene que ser real.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Paso 4 — DM al día siguiente</div>
+          <h4>Recién ahora mandás el primer mensaje</h4>
+          <p>Nunca el mismo día que interactuaste. Al día siguiente parece más natural y menos forzado.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-lime"></div>
+      <div class="step-card-num">D2</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Scripts de DM — Todos los escenarios</div>
+        <div class="step-card-sub">Primer contacto · Seguimiento · Cierre · Objeciones</div>
+      </div>
+      <span class="step-card-tag tag-lime">Copiar</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 1 — Primer contacto (después de interactuar)</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm1">Hola [Nombre]! 👋
+
+Vi tus posts sobre [tema que tiene en su perfil]
+y me pareció que tenemos intereses en común.
+
+Yo estoy en algo que combina crypto con red de personas
+y me está dando buenos resultados desde el celular.
+
+¿Te interesaría que te cuente en qué consiste?
+Sin compromiso, solo por si te llama la atención 🟢</div>
+        <div class="copy-box-note">⟶ Personalizá siempre la primera línea. Mencioná algo específico de su perfil. Si ven que copiaste y pegaste sin leerlos, no responden.</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 2 — Cuando responden "¿De qué se trata?"</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm2">Buenísimo! Te lo explico cortito:
+
+Es un sistema de economía colaborativa en blockchain:
+1️⃣ Entrás con ~15 USDT (incluye fees de red TRC-20)
+2️⃣ Ayudás a 2 personas a hacer lo mismo (matriz 2×2)
+3️⃣ Cuando tu matriz se completa,
+   recibís directo en tu wallet
+
+Sin jefe. Sin horarios. Desde el celular.
+Los pagos van de wallet a wallet por la red TRC-20.
+
+¿Tenés wallet de USDT o arrancamos desde cero?</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 3 — Cuando dicen "No tengo wallet / no sé de crypto"</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm3">Perfecto, yo tampoco sabía nada cuando empecé 😄
+
+Solo necesitás:
+📱 Tu celular
+⏰ 10 minutos
+💵 ~15 USDT para empezar (posición + fees de red)
+
+Te mando un tutorial de 3 pasos para crear
+tu wallet gratis. Es más fácil que el homebanking.
+
+¿Lo querés?</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 4 — Cuando dicen "Voy a pensarlo"</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm4')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm4">Claro, tomá tu tiempo 🙌
+
+¿Qué es lo que más dudas te genera todavía?
+Quizás puedo ayudarte a resolverla antes de decidir.
+
+Y si preferís procesarlo solo,
+acá tenés el video explicativo corto:
+[link video o "te lo mando por acá"]
+
+Cuando estés listo, escribime 🟢</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 5 — Seguimiento (si no respondió en 3 días)</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm5')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm5">Hola [Nombre]! ¿Todo bien? 👋
+
+Solo quería contarte que hoy en mi equipo
+[alguien / yo] hicimos un retiro de [monto] USDT.
+
+Sistema corriendo en automático 🟢
+
+Si en algún momento querés saber más,
+acá estoy sin ninguna presión.
+
+¿Todo bien por tu lado?</div>
+        <div class="copy-box-note">⟶ No preguntes "¿Qué decidiste?" — eso presiona. Compartí una novedad real y dejá la puerta abierta.</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 DM 6 — Cuando dicen "¿Eso es una pirámide?"</span>
+          <button class="copy-btn" onclick="copyText(this, 'dm6')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="dm6">Entiendo la duda, me la hacen mucho 😄
+
+Una pirámide funciona mientras entran nuevos.
+Cuando paran de entrar, colapsa.
+
+LIME es distinto:
+Los pagos van directo por la red TRC-20,
+de wallet a wallet.
+No los controla ninguna persona ni empresa.
+Podés verificar cada transacción en Tronscan.org ahora mismo.
+
+Si querés, te muestro una transacción real
+para que veas cómo funciona.
+¿Qué te parece?</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 10 COMENTARIOS -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="comentarios">
+  <div class="section-header">
+    <div class="section-num-big">10</div>
+    <div class="section-title-block">
+      <span class="section-kicker">El puente entre contenido y DM</span>
+      <div class="section-title">Gestión de comentarios — Cómo responder y convertir</div>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Comentario recibido</th>
+        <th>Cómo respondés en público</th>
+        <th>DM inmediato</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>"INFO" o "Quiero saber más"</td>
+        <td>"Te mando info ahora mismo por DM 🟢"</td>
+        <td>Sí — DM 2 inmediato</td>
+      </tr>
+      <tr>
+        <td>"¿Cuánto se gana?"</td>
+        <td>"Depende mucho de cada persona. Te explico con números reales por DM 👇"</td>
+        <td>Sí — con tabla de niveles</td>
+      </tr>
+      <tr>
+        <td>"Eso es una estafa / pirámide"</td>
+        <td>"Entiendo la duda, es válida. Lo que sí puedo decirte es que los pagos son verificables en blockchain por cualquiera. ¿Querés que te muestre cómo verificarlo?"</td>
+        <td>Solo si muestra interés</td>
+      </tr>
+      <tr>
+        <td>"¿Necesito mucho dinero?"</td>
+        <td>"Arranca con ~15 USDT. Te cuento todo por DM 🟢"</td>
+        <td>Sí — con el proceso completo</td>
+      </tr>
+      <tr>
+        <td>"Yo probé algo así y me fue mal"</td>
+        <td>"Entiendo. Si querés te cuento qué hace diferente a este sistema. Sin presión."</td>
+        <td>Solo si responde</td>
+      </tr>
+      <tr>
+        <td>Emoji positivo (❤️ 🔥 👏)</td>
+        <td>Respondé con el mismo emoji y "¡Gracias! Si tenés preguntas, escribime 🟢"</td>
+        <td>Opcional, no forzar</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="info-box info-lime">
+    <span class="info-box-icon">⚡</span>
+    <div class="info-box-body">
+      <strong>Regla de los comentarios</strong>
+      <p>Respondé TODOS los comentarios dentro de la primera hora. 
+      El algoritmo de Instagram premia la actividad temprana en los posts. 
+      Además, quien comenta está caliente: si tardás 6 horas en responder, 
+      ya se olvidó que escribió.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 11 CIERRE EN DM -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="cierre">
+  <div class="section-header">
+    <div class="section-num-big">11</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Del DM a la entrada</span>
+      <div class="section-title">Cómo cerrar una venta por Instagram DM</div>
+      <p class="section-desc">La secuencia completa desde que alguien muestra interés hasta que activa su posición en LIME.</p>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-purple"></div>
+      <div class="step-card-num">C1</div>
+      <div class="step-card-info">
+        <div class="step-card-title">La secuencia completa de cierre — Paso a paso</div>
+        <div class="step-card-sub">Del interés inicial al primer USDT enviado</div>
+      </div>
+      <span class="step-card-tag tag-lime">Flujo completo</span>
+      <div class="step-card-chevron open">›</div>
+    </div>
+    <div class="step-body open">
+      <div class="timeline">
+        <div class="tl-item">
+          <div class="tl-label">Momento 1</div>
+          <h4>Mandan "INFO" o te escriben por DM</h4>
+          <p>Respondés en menos de 30 minutos. Usás DM 2 del módulo anterior. Siempre con calidez, nunca mecánico.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Momento 2</div>
+          <h4>Muestran interés pero tienen dudas</h4>
+          <p>Preguntás: "¿Qué es lo que más dudas te genera?" Escuchás. Respondés esa duda puntual. No mandés un manual de 20 páginas.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Momento 3</div>
+          <h4>Preguntan sobre el proceso de entrada</h4>
+          <p>Ahí mandás la secuencia de entrada. Solo cuando preguntan, no antes.</p>
+        </div>
+        <div class="tl-item">
+          <div class="tl-label">Momento 4</div>
+          <h4>Dicen "¿Cómo empiezo?"</h4>
+          <p>Este es el cierre. Mandás el script de inicio que está abajo.</p>
+        </div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 SCRIPT DE INICIO — Cuando dicen "¿Cómo empiezo?"</span>
+          <button class="copy-btn" onclick="copyText(this, 'close1')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="close1">¡Perfecto! Son 3 pasos simples 🟢
+
+PASO 1: Crear tu wallet (10 minutos)
+Te mando el tutorial ahora mismo.
+Es la app TronLink o Trust Wallet, gratis.
+
+PASO 2: Comprar ~15 USDT
+Se puede desde Binance, Lemon, Ripio 
+o cualquier exchange de tu país.
+~15 USDT ≈ 15 dólares (incluye fees de red).
+
+PASO 3: Activar tu posición
+Con tu link personal que te voy a dar,
+enviás los USDT y ya estás dentro.
+
+¿Por cuál paso arrancamos?
+[Tutorial de wallet] ← te lo mando ya</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 SCRIPT — Cuando ya tienen wallet y quieren activar</span>
+          <button class="copy-btn" onclick="copyText(this, 'close2')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="close2">Genial, casi estás! 🎉
+
+Para activar tu posición:
+1️⃣ Abrí este link: [TU LINK DE REFERIDO]
+2️⃣ Conectá tu wallet
+3️⃣ Enviá ~15 USDT (posición + fees de red TRC-20)
+
+En cuanto lo hagas, aparece en tu wallet
+y te agrego al grupo de equipo.
+
+¿Tenés alguna duda antes de hacerlo?</div>
+      </div>
+
+      <div class="copy-box">
+        <div class="copy-box-header">
+          <span class="copy-box-label">💬 SCRIPT — Bienvenida cuando entran (dentro de las 2 horas)</span>
+          <button class="copy-btn" onclick="copyText(this, 'close3')">Copiar</button>
+        </div>
+        <div class="copy-box-text" id="close3">¡BIENVENIDO/A AL EQUIPO! 🎉🟢
+
+[Nombre], acabo de ver que ya estás adentro.
+
+Lo que sigue:
+✅ Te agrego al grupo de equipo ahora
+✅ Ahí vas a ver actividad en tiempo real
+✅ Tu primera misión: escribirle hoy a 5 personas
+
+¿Por dónde querés que te acompañe primero?</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 12 CALENDARIO -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="calendario">
+  <div class="section-header">
+    <div class="section-num-big">12</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Tu hoja de ruta</span>
+      <div class="section-title">Plan de contenido — Los primeros 30 días</div>
+      <p class="section-desc">Seguí este plan exacto. Un post por día si podés. Si no podés, al menos los marcados con ★.</p>
+    </div>
+  </div>
+
+  <div class="calendar">
+    <div class="cal-header">LUN</div>
+    <div class="cal-header">MAR</div>
+    <div class="cal-header">MIÉ</div>
+    <div class="cal-header">JUE</div>
+    <div class="cal-header">VIE</div>
+    <div class="cal-header">SAB</div>
+    <div class="cal-header">DOM</div>
+
+    <!-- SEMANA 1 -->
+    <div class="cal-day active"><div class="cal-day-num">1</div><div class="cal-task">★ PERFIL IG listo</div></div>
+    <div class="cal-day active"><div class="cal-day-num">2</div><div class="cal-task">Story presentación</div></div>
+    <div class="cal-day active"><div class="cal-day-num">3</div><div class="cal-task">★ CARRUSEL C1 (USDT)</div></div>
+    <div class="cal-day active"><div class="cal-day-num">4</div><div class="cal-task">Story encuesta</div></div>
+    <div class="cal-day active"><div class="cal-day-num">5</div><div class="cal-task">★ REEL R2 (historia)</div></div>
+    <div class="cal-day"><div class="cal-day-num">6</div><div class="cal-task">Story personal</div></div>
+    <div class="cal-day"><div class="cal-day-num">7</div><div class="cal-task">Story motivacional</div></div>
+
+    <!-- SEMANA 2 -->
+    <div class="cal-day active"><div class="cal-day-num">8</div><div class="cal-task">★ CARRUSEL C2 (fracasos)</div></div>
+    <div class="cal-day"><div class="cal-day-num">9</div><div class="cal-task">Story dato crypto</div></div>
+    <div class="cal-day active"><div class="cal-day-num">10</div><div class="cal-task">★ REEL R1 (retiro)</div></div>
+    <div class="cal-day"><div class="cal-day-num">11</div><div class="cal-task">Story encuesta ingresos</div></div>
+    <div class="cal-day active"><div class="cal-day-num">12</div><div class="cal-task">★ POST foto personal</div></div>
+    <div class="cal-day"><div class="cal-day-num">13</div><div class="cal-task">Story celebración</div></div>
+    <div class="cal-day"><div class="cal-day-num">14</div><div class="cal-task">Story motivación</div></div>
+
+    <!-- SEMANA 3 -->
+    <div class="cal-day active"><div class="cal-day-num">15</div><div class="cal-task">★ CARRUSEL C3 (LIME simple)</div></div>
+    <div class="cal-day"><div class="cal-day-num">16</div><div class="cal-task">Story proceso wallet</div></div>
+    <div class="cal-day active"><div class="cal-day-num">17</div><div class="cal-task">★ REEL R3 (antes/después)</div></div>
+    <div class="cal-day"><div class="cal-day-num">18</div><div class="cal-task">Story pregunta abierta</div></div>
+    <div class="cal-day active"><div class="cal-day-num">19</div><div class="cal-task">★ POST caso de éxito equipo</div></div>
+    <div class="cal-day"><div class="cal-day-num">20</div><div class="cal-task">Story desde donde trabajás</div></div>
+    <div class="cal-day"><div class="cal-day-num">21</div><div class="cal-task">Story oferta suave</div></div>
+
+    <!-- SEMANA 4 -->
+    <div class="cal-day active"><div class="cal-day-num">22</div><div class="cal-task">★ CARRUSEL C4 (objeciones)</div></div>
+    <div class="cal-day"><div class="cal-day-num">23</div><div class="cal-task">Story retiro tuyo</div></div>
+    <div class="cal-day active"><div class="cal-day-num">24</div><div class="cal-task">★ REEL R4 (no es pirámide)</div></div>
+    <div class="cal-day"><div class="cal-day-num">25</div><div class="cal-task">Story encuesta confianza</div></div>
+    <div class="cal-day active"><div class="cal-day-num">26</div><div class="cal-task">★ POST motivacional</div></div>
+    <div class="cal-day"><div class="cal-day-num">27</div><div class="cal-task">Story celebración equipo</div></div>
+    <div class="cal-day"><div class="cal-day-num">28</div><div class="cal-task">Story balance del mes</div></div>
+
+    <!-- DIAS 29-30 -->
+    <div class="cal-day active"><div class="cal-day-num">29</div><div class="cal-task">★ REEL resumen mes 1</div></div>
+    <div class="cal-day active"><div class="cal-day-num">30</div><div class="cal-task">★ POST plan mes 2</div></div>
+    <div class="cal-day"><div class="cal-day-num">—</div><div class="cal-task"></div></div>
+    <div class="cal-day"><div class="cal-day-num">—</div><div class="cal-task"></div></div>
+    <div class="cal-day"><div class="cal-day-num">—</div><div class="cal-task"></div></div>
+    <div class="cal-day"><div class="cal-day-num">—</div><div class="cal-task"></div></div>
+    <div class="cal-day"><div class="cal-day-num">—</div><div class="cal-task"></div></div>
+  </div>
+
+  <div class="copy-box">
+    <div class="copy-box-header">
+      <span class="copy-box-label">📲 STORY DÍA 30 — Balance del mes (copiar)</span>
+      <button class="copy-btn" onclick="copyText(this, 'story30')">Copiar</button>
+    </div>
+    <div class="copy-box-text" id="story30">MES 1 COMPLETADO 🎉
+
+En estos 30 días:
+→ [N] personas se sumaron a mi red
+→ Llegué al nivel [N] del sistema  
+→ [Monto] USDT en retiros
+→ Aprendí más de finanzas que en años
+
+¿El próximo mes?
+→ Meta: [N] personas nuevas
+→ Llegar al nivel [N+1]
+→ [Tu objetivo personal]
+
+Si querés empezar el mes 2 conmigo,
+escribime. Arrancamos juntos 🟢</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 13 MÉTRICAS -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="metricas">
+  <div class="section-header">
+    <div class="section-num-big">13</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Medir para mejorar</span>
+      <div class="section-title">Las métricas que importan</div>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric-card">
+      <span class="metric-num">10</span>
+      <span class="metric-label">DMs proactivos por día</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">30%</span>
+      <span class="metric-label">Tasa de respuesta a DMs (objetivo)</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">20%</span>
+      <span class="metric-label">De los que responden → convierten</span>
+    </div>
+    <div class="metric-card">
+      <span class="metric-num">2-3</span>
+      <span class="metric-label">Entradas nuevas por semana (objetivo mes 1)</span>
+    </div>
+  </div>
+
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Métrica</th>
+        <th>Cómo medirla</th>
+        <th>Frecuencia</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>DMs enviados</td>
+        <td>Contá en tu lista de contactos de IG (o en Google Sheets)</td>
+        <td>Diario</td>
+      </tr>
+      <tr>
+        <td>Respuestas recibidas</td>
+        <td>Contá cuántos respondieron el primer DM esta semana</td>
+        <td>Semanal</td>
+      </tr>
+      <tr>
+        <td>Personas que pidieron más info</td>
+        <td>Cuántos llegaron al punto de preguntar "¿cómo entro?"</td>
+        <td>Semanal</td>
+      </tr>
+      <tr>
+        <td>Entradas concretas</td>
+        <td>Personas que activaron su posición</td>
+        <td>Semanal</td>
+      </tr>
+      <tr>
+        <td>Alcance de posts</td>
+        <td>Estadísticas de IG → cada post → "Personas alcanzadas"</td>
+        <td>Por post</td>
+      </tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 14 ERRORES -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="errores">
+  <div class="section-header">
+    <div class="section-num-big">14</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Aprender de los demás</span>
+      <div class="section-title">Los 8 errores más comunes en Instagram con LIME</div>
+    </div>
+  </div>
+
+  <div class="step-card">
+    <div class="step-card-header" onclick="toggle(this)">
+      <div class="step-card-accent accent-orange"></div>
+      <div class="step-card-num">!</div>
+      <div class="step-card-info">
+        <div class="step-card-title">Ver todos los errores comunes y cómo evitarlos</div>
+        <div class="step-card-sub">Leé esto antes de publicar tu primer post</div>
+      </div>
+      <span class="step-card-tag tag-orange">Importante</span>
+      <div class="step-card-chevron">›</div>
+    </div>
+    <div class="step-body">
+      <table class="data-table">
+        <thead>
+          <tr><th>#</th><th>Error</th><th>Por qué pasa</th><th>Cómo evitarlo</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td style="color:var(--red)">1</td>
+            <td>Publicar solo contenido de venta</td>
+            <td>Quieren resultados rápidos</td>
+            <td>Regla 80/20: 80% educativo, 20% oferta</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">2</td>
+            <td>Prometer ganancias exactas en posts</td>
+            <td>Para convencer más rápido</td>
+            <td>Mostrar rangos reales, siempre con disclaimer</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">3</td>
+            <td>Mandar el mismo DM a 100 personas</td>
+            <td>Quieren escalar sin esfuerzo</td>
+            <td>Personalizar al menos la primera línea de cada DM</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">4</td>
+            <td>Publicar 5 días y desaparecer 10</td>
+            <td>Pierden motivación temprano</td>
+            <td>Comprometerse con mínimo 3 posts por semana durante 30 días</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">5</td>
+            <td>Ignorar comentarios y DMs</td>
+            <td>No tienen tiempo o sistema</td>
+            <td>Revisar IG dos veces al día: mañana y tarde</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">6</td>
+            <td>Poner solo logos en el perfil</td>
+            <td>Creen que parece más profesional</td>
+            <td>Foto de cara humana. Siempre.</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">7</td>
+            <td>Entrar en discusiones con negativos</td>
+            <td>Quieren defender el negocio</td>
+            <td>Responder una vez con datos, después ignorar. No alimentar la discusión.</td>
+          </tr>
+          <tr>
+            <td style="color:var(--red)">8</td>
+            <td>Copiar exactamente el contenido de otro</td>
+            <td>Les da miedo crear propio</td>
+            <td>Tomá los textos de esta guía como base, adaptá con tus palabras y tu historia real</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════ -->
+<!-- 15 CHECKLIST -->
+<!-- ══════════════════════════════════════ -->
+<section class="page-section" id="checklist">
+  <div class="section-header">
+    <div class="section-num-big">15</div>
+    <div class="section-title-block">
+      <span class="section-kicker">Tu hoja de control</span>
+      <div class="section-title">Checklist final antes de lanzar</div>
+    </div>
+  </div>
+
+  <div class="grid-2">
+    <div>
+      <h3 style="font-size:15px; font-weight:800; color:var(--lime); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase;">✅ Perfil listo</h3>
+      <ul class="check-list">
+        <li><div class="check-icon">✓</div>Foto de perfil con cara visible y sonrisa</li>
+        <li><div class="check-icon">✓</div>Bio en 3 líneas copiada y personalizada</li>
+        <li><div class="check-icon">✓</div>Linktree creado con 3 links activos</li>
+        <li><div class="check-icon">✓</div>4 Historias Destacadas configuradas</li>
+        <li><div class="check-icon">✓</div>Al menos 3 posts publicados antes de empezar DMs</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px; font-weight:800; color:var(--lime); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase;">✅ Contenido listo</h3>
+      <ul class="check-list">
+        <li><div class="check-icon">✓</div>Carrusel C1 armado en Canva</li>
+        <li><div class="check-icon">✓</div>Reel R1 o R2 grabado y editado</li>
+        <li><div class="check-icon">✓</div>7 stories de la semana 1 preparadas</li>
+        <li><div class="check-icon">✓</div>Captions guardados para copiar rápido</li>
+        <li><div class="check-icon">✓</div>Sets de hashtags guardados en notas del celular</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px; font-weight:800; color:var(--lime); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase;">✅ DMs y captación</h3>
+      <ul class="check-list">
+        <li><div class="check-icon">✓</div>Script DM 1 guardado para copiar y personalizar</li>
+        <li><div class="check-icon">✓</div>Scripts de objeciones guardados</li>
+        <li><div class="check-icon">✓</div>Script de cierre listo</li>
+        <li><div class="check-icon">✓</div>Tutorial de wallet para enviar</li>
+        <li><div class="check-icon">✓</div>Link de referido copiado y probado</li>
+      </ul>
+    </div>
+    <div>
+      <h3 style="font-size:15px; font-weight:800; color:var(--lime); margin-bottom:16px; letter-spacing:1px; text-transform:uppercase;">✅ Rutina diaria</h3>
+      <ul class="check-list">
+        <li><div class="check-icon">✓</div>10 DMs proactivos cada mañana</li>
+        <li><div class="check-icon">✓</div>1 story diaria mínimo</li>
+        <li><div class="check-icon">✓</div>Responder comentarios en 1 hora</li>
+        <li><div class="check-icon">✓</div>Revisar DMs 2 veces por día</li>
+        <li><div class="check-icon">✓</div>1 post de carrusel o reel por semana (mínimo 3)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="info-box info-lime" style="margin-top:32px;">
+    <span class="info-box-icon">🚀</span>
+    <div class="info-box-body">
+      <strong>El único paso que falta</strong>
+      <p>Tenés todos los textos, todos los scripts, todos los formatos. 
+      El sistema no puede hacer el primer post por vos. 
+      Ese paso lo hacés vos hoy. No mañana. Hoy.<br><br>
+      <strong>La pregunta no es si podés. Es cuándo empezás.</strong></p>
+    </div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+// Toggle step cards
+function toggle(header) {
+  const body = header.nextElementSibling;
+  const chevron = header.querySelector('.step-card-chevron');
+  const isOpen = body.classList.contains('open');
+  body.classList.toggle('open', !isOpen);
+  chevron.classList.toggle('open', !isOpen);
+  if (!isOpen) {
+    setTimeout(() => header.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 50);
+  }
+}
+
+// Copy to clipboard
+function copyText(btn, id) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  navigator.clipboard.writeText(el.innerText).then(() => {
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  }).catch(() => {
+    // fallback
+    const ta = document.createElement('textarea');
+    ta.value = el.innerText;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    btn.textContent = '✓ Copiado!';
+    btn.classList.add('copied');
+    setTimeout(() => {
+      btn.textContent = 'Copiar';
+      btn.classList.remove('copied');
+    }, 2000);
+  });
+}
+
+// Progress bar
+window.addEventListener('scroll', () => {
+  const winScroll = document.documentElement.scrollTop;
+  const height = document.documentElement.scrollHeight - window.innerHeight;
+  const pct = height > 0 ? (winScroll / height) * 100 : 0;
+  document.getElementById('progressFill').style.width = pct + '%';
+});
+
+// Active nav
+const sections = document.querySelectorAll('.page-section[id]');
+const navItems = document.querySelectorAll('.nav-item');
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.getAttribute('id');
+      navItems.forEach(item => {
+        item.classList.toggle('active', item.getAttribute('href') === '#' + id);
+      });
+    }
+  });
+}, { rootMargin: '-30% 0px -60% 0px' });
+
+sections.forEach(s => obs.observe(s));
+
+// Open first step card in each section automatically on mobile
+if (window.innerWidth <= 900) {
+  document.querySelectorAll('.step-body').forEach(b => {
+    b.style.display = 'none';
+  });
+}
+</script>
+
+</body>
+</html>
