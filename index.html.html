@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>U-LIME System</title>
+  <style>
+    :root{
+      --bg:#071018;
+      --bg2:#0d1b26;
+      --card:#102535cc;
+      --text:#ecf7ff;
+      --muted:#a8c7d8;
+      --accent:#22d3ee;
+      --accent2:#34d399;
+      --shadow: 0 20px 60px rgba(0,0,0,.35);
+      --radius: 22px;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;padding:0}
+    body{
+      font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--text);
+      background:
+        radial-gradient(circle at 20% 20%, rgba(34,211,238,.16), transparent 26%),
+        radial-gradient(circle at 80% 10%, rgba(52,211,153,.14), transparent 22%),
+        radial-gradient(circle at 70% 80%, rgba(245,158,11,.10), transparent 20%),
+        linear-gradient(160deg, var(--bg), var(--bg2));
+      min-height:100vh;
+    }
+    .wrap{width:min(1180px, 92vw);margin:0 auto;}
+    header{padding:28px 0 12px;}
+    .topbar{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;}
+    .brand{display:flex;align-items:center;gap:14px;}
+    .logo{
+      width:52px;height:52px;border-radius:16px;display:grid;place-items:center;
+      background:linear-gradient(135deg, rgba(34,211,238,.25), rgba(52,211,153,.22));
+      border:1px solid rgba(255,255,255,.12);box-shadow:var(--shadow);font-weight:800;letter-spacing:.5px;
+    }
+    .brand h1{margin:0;font-size:1.15rem;line-height:1.1;}
+    .brand p{margin:.2rem 0 0;color:var(--muted);font-size:.94rem;}
+    .hero{padding:36px 0 28px;display:grid;grid-template-columns:1.15fr .85fr;gap:28px;align-items:center;}
+    .hero-card, .panel, .card{
+      background:var(--card);border:1px solid rgba(255,255,255,.11);
+      border-radius:var(--radius);box-shadow:var(--shadow);backdrop-filter: blur(10px);
+    }
+    .hero-card{padding:34px;}
+    .eyebrow{
+      display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);color:#d7f7ff;
+      font-size:.9rem;margin-bottom:18px;
+    }
+    .hero h2{font-size:clamp(2rem, 4vw, 3.8rem);line-height:1;margin:0 0 14px;letter-spacing:-.04em;}
+    .hero p{font-size:1.06rem;line-height:1.65;color:var(--muted);margin:0 0 22px;max-width:62ch;}
+    .actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:10px;}
+    .btn{
+      display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 18px;
+      border-radius:14px;text-decoration:none;color:var(--text);
+      border:1px solid rgba(255,255,255,.13);transition:.2s ease;font-weight:700;
+    }
+    .btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.25);}
+    .btn-primary{background:linear-gradient(135deg, var(--accent), var(--accent2));color:#051118;border:none;}
+    .panel{padding:26px;}
+    .panel h3{margin:0 0 16px;font-size:1.15rem;}
+    .stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:12px;}
+    .stat{
+      padding:18px;border-radius:18px;background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.08);
+    }
+    .stat strong{display:block;font-size:1.35rem;margin-bottom:4px;}
+    .stat span{color:var(--muted);font-size:.94rem;}
+    section{padding:18px 0 12px;}
+    .section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin-bottom:16px;flex-wrap:wrap;}
+    .section-head h3{margin:0;font-size:1.5rem;}
+    .section-head p{margin:6px 0 0;color:var(--muted);}
+    .grid{display:grid;grid-template-columns:repeat(3, 1fr);gap:18px;}
+    .card{padding:22px;display:flex;flex-direction:column;min-height:280px;}
+    .tag{
+      display:inline-flex;width:max-content;padding:7px 10px;border-radius:999px;font-size:.82rem;
+      border:1px solid rgba(255,255,255,.12);color:#d4f7ff;background:rgba(255,255,255,.05);margin-bottom:14px;
+    }
+    .card h4{font-size:1.3rem;margin:0 0 10px;}
+    .card p{color:var(--muted);line-height:1.6;margin:0 0 18px;flex:1;}
+    .links{display:flex;flex-wrap:wrap;gap:10px;margin-top:auto;}
+    .link{
+      text-decoration:none;color:var(--text);border:1px solid rgba(255,255,255,.12);
+      padding:11px 14px;border-radius:12px;font-weight:700;background:rgba(255,255,255,.04);
+    }
+    .checklist{margin:0;padding-left:18px;color:var(--muted);line-height:1.7;}
+    .footer{padding:34px 0 40px;color:var(--muted);text-align:center;font-size:.95rem;}
+    @media (max-width: 900px){
+      .hero{grid-template-columns:1fr}
+      .grid{grid-template-columns:1fr}
+      .stats{grid-template-columns:1fr 1fr}
+    }
+    @media (max-width: 620px){
+      .hero-card,.panel,.card{padding:20px}
+      .stats{grid-template-columns:1fr}
+      .hero h2{font-size:2.2rem}
+      .btn,.link{width:100%}
+      .actions,.links{flex-direction:column}
+    }
+  </style>
+</head>
+<body>
+  <header class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo">UL</div>
+        <div>
+          <h1>U-LIME System</h1>
+          <p>Centro de recursos, estrategia y contenido</p>
+        </div>
+      </div>
+      <a class="btn" href="https://github.com/erikaleveratto-ship-it/ulime" target="_blank" rel="noopener">Ver repositorio</a>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="hero">
+      <div class="hero-card">
+        <div class="eyebrow">⚡ Ecosistema digital listo para compartir</div>
+        <h2>Tu hub profesional de U-LIME ya está online.</h2>
+        <p>
+          Desde esta portada podés centralizar tus materiales clave, compartir un solo enlace
+          y dar una imagen mucho más sólida, ordenada y confiable.
+        </p>
+        <div class="actions">
+          <a class="btn btn-primary" href="#recursos">Entrar al sistema</a>
+          <a class="btn" href="LIME_ESTRATEGIA_MAESTRA.html">Abrir Estrategia Maestra</a>
+        </div>
+      </div>
+
+      <aside class="panel">
+        <h3>Resumen del portal</h3>
+        <div class="stats">
+          <div class="stat"><strong>3</strong><span>Documentos principales</span></div>
+          <div class="stat"><strong>1</strong><span>Link central para compartir</span></div>
+          <div class="stat"><strong>24/7</strong><span>Acceso desde celular o PC</span></div>
+          <div class="stat"><strong>Pro</strong><span>Imagen seria y ordenada</span></div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="recursos">
+      <div class="section-head">
+        <div>
+          <h3>Recursos principales</h3>
+          <p>Accedé rápido a cada bloque del sistema.</p>
+        </div>
+      </div>
+
+      <div class="grid">
+        <article class="card">
+          <span class="tag">📊 Estrategia</span>
+          <h4>Estrategia Maestra</h4>
+          <p>Visión general, estructura y marco estratégico para presentar y ordenar la propuesta de valor.</p>
+          <div class="links">
+            <a class="link" href="LIME_ESTRATEGIA_MAESTRA.html">Abrir documento</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">📘 Implementación</span>
+          <h4>Guía Paso a Paso</h4>
+          <p>Recorrido operativo para ejecutar el sistema con claridad y darle a cualquier persona un camino concreto.</p>
+          <div class="links">
+            <a class="link" href="LIME_Guia_Paso_a_Paso.html">Abrir guía</a>
+          </div>
+        </article>
+
+        <article class="card">
+          <span class="tag">📱 Contenido</span>
+          <h4>Instagram Completo</h4>
+          <p>Material enfocado en comunicación, posicionamiento, contenido y uso estratégico de Instagram.</p>
+          <div class="links">
+            <a class="link" href="LIME_Instagram_Completo.html">Abrir contenido</a>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-head">
+        <div>
+          <h3>Cómo compartirlo bien</h3>
+          <p>Usá siempre el link principal para que la experiencia sea prolija.</p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <ul class="checklist">
+          <li>Compartí la portada principal y no los tres links sueltos, salvo que necesites enviar uno específico.</li>
+          <li>Usá este sitio como base para WhatsApp, Instagram, bio, Link-in-bio o presentaciones privadas.</li>
+          <li>Cuando actualices tus HTML en GitHub, el sitio se actualiza solo.</li>
+          <li>Más adelante podés sumar formulario, botón de registro, contacto o branding visual más fuerte.</li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="footer">
+      U-LIME System · Sitio publicado con GitHub Pages
+    </div>
+  </main>
+</body>
+</html>
